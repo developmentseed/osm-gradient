@@ -1,0 +1,15 @@
+{
+  "name": "osmtardis",
+  "version": "1.0.0",
+  "description": "Minutely metrics for OSM using FlatGeoBuff",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "osm-adiff-parser": "^1.1.0",
+    "real-changesets-parser": "^1.3.1"
+  }
+}
