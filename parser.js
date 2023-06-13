@@ -1,22 +1,35 @@
-const adiffParser = require('osm-adiff-parser');
-const changesetParser = require('real-changesets-parser');
-const fs = require('fs');
+const fs = require("fs");
+const adiffParser = require("./parsers/adiffParser");
+const changesetParser = require("real-changesets-parser");
+const { prop } = require("ramda");
 
 // Read the file name from the command-line argument
 const fileName = process.argv[2];
 
 // Read the file
-fs.readFile(fileName, 'utf8', (err, data) => {
-  if (err) {
-    console.error('Error reading the file:', err);
-    return;
-    }
-
-    result = adiffParser(data, null, (err, result) => {
-        console.log(result);
-        return result;
+async function main() {
+  try {
+    const data = fs.readFileSync(fileName);
+    const adiff = await adiffParser(data);
+    const featureCollection = {
+      type: "FeatureCollection",
+      features: [],
+    };
+    const featureCollections = Object.keys(adiff).map((key) => {
+      const changeset = adiff[key];
+      const fc = changesetParser(changeset);
+      return fc;
     });
+    featureCollection.features = featureCollections
+      .map(prop("features"))
+      .flat();
 
-    changeset = changesetParser(result)
-    console.log(changeset)
-});
+    console.log(JSON.stringify(featureCollection, null, 2));
+  } catch (err) {
+    console.error("Error reading the file:", err);
+  }
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((err) => process.exit(1));
