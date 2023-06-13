@@ -1,7 +1,15 @@
 const fs = require("fs");
 const adiffParser = require("./parsers/adiffParser");
-const changesetParser = require("real-changesets-parser");
-const { prop } = require("ramda");
+const elementParser = require("./parsers/element");
+var featureCollection = require("@turf/helpers").featureCollection;
+const { prop, pipe, flatten } = require("ramda");
+
+const changesetParser = pipe(
+  prop(["elements"]),
+  (array) => array.map(elementParser),
+  flatten,
+  featureCollection
+);
 
 // Read the file name from the command-line argument
 const fileName = process.argv[2];
