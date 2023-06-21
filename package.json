@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "osm-adiff-parser": "^1.1.0",
-    "real-changesets-parser": "^1.3.1"
+    "real-changesets-parser": "https://github.com/developmentseed/real-changesets-parser.git"
   }
 }

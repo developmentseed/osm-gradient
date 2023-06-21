@@ -83,10 +83,9 @@ ramda@^0.27.1:
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.27.2.tgz#84463226f7f36dc33592f6f4ed6374c48306c3f1"
   integrity sha512-SbiLPU40JuJniHexQSAgad32hfwd+DRUdwF2PlVuI5RZD0/vahUco7R8vD86J/tcEKKF9vZrUVwgtmGCqlCKyA==
 
-real-changesets-parser@^1.3.1:
+"real-changesets-parser@https://github.com/developmentseed/real-changesets-parser.git":
   version "1.3.1"
-  resolved "https://registry.yarnpkg.com/real-changesets-parser/-/real-changesets-parser-1.3.1.tgz#f8607ee4c2dfd74f1aa6b1160bc363ca23f646d6"
-  integrity sha512-3u7L1rTOELKwVRgot+Vz2eNPwW60g8yDgyM/63XEIpiHTRnlnrm+k38XaQeg2E7O48UOsDPF26OxbMrZugwMjA==
+  resolved "https://github.com/developmentseed/real-changesets-parser.git#ac929ad8041cd3707fb6f989c0d217b1959fc528"
   dependencies:
     "@turf/bbox" "^6.0.1"
     "@turf/bbox-polygon" "^6.0.1"
