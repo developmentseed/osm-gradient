@@ -59,7 +59,7 @@ if (START_SEQUENCE) {
 }
 
 const convertToFlatGeobuf = (inputGeoJSON, outputFlatGeobuf, callback) => {
-    const ogr2ogrCommand = `ogr2ogr -f "FlatGeobuf" ${outputFlatGeobuf} ${inputGeoJSON}`;
+    const ogr2ogrCommand = `ogr2ogr -f "FlatGeobuf" ${outputFlatGeobuf} ${inputGeoJSON} -skipfailures`;
     console.log('Converting to FGB', ogr2ogrCommand);
 
     exec(ogr2ogrCommand, (error, stdout, stderr) => {
