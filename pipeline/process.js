@@ -3,7 +3,7 @@ const fs = require('fs');
 const processFile = require('./parser')
 const { exec } = require('node:child_process');
 
-const START_SEQUENCE = 5668181;
+const START_SEQUENCE = 5668187;
 const OSC_SOURCE_URL = 'http://s3-eu-west-1.amazonaws.com/overpass-db-eu-west-1/augmented-diffs';
 const DOWNLOAD_PATH = '/tmp';
 
@@ -25,9 +25,12 @@ const downloadFile = (index, retryCount = 0) => {
 
         // parse
         processFile(outputPath, (err, geojson) => {
+            if (err) {
+                console.log('Failed to create GeoJSON', err);
+            }
             const geojsonPath = `${DOWNLOAD_PATH}/${index}.geojson`;
             fs.writeFileSync(`${DOWNLOAD_PATH}/${index}.geojson`, JSON.stringify(geojson, null, 2));
-
+            console.log(`✔ GeoJSON ${geojsonPath}`)
             // convert to fgb
             convertToFlatGeobuf(geojsonPath, `${DOWNLOAD_PATH}/${index}.fgb`, (err) => {
                 if (err) {
@@ -49,6 +52,7 @@ const downloadFile = (index, retryCount = 0) => {
       console.error(`Max retries exceeded. File could not be downloaded: ${index}`);
     }
   }).on('error', (error) => {
+    console.log(url)
     console.error('Failed to download file:', error);
   });
 };
@@ -60,14 +64,14 @@ if (START_SEQUENCE) {
 
 const convertToFlatGeobuf = (inputGeoJSON, outputFlatGeobuf, callback) => {
     const ogr2ogrCommand = `ogr2ogr -f "FlatGeobuf" ${outputFlatGeobuf} ${inputGeoJSON} -skipfailures`;
-    console.log('Converting to FGB', ogr2ogrCommand);
+    console.log('⚙ FGB', ogr2ogrCommand);
 
     exec(ogr2ogrCommand, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error converting to FlatGeobuf: ${stderr}`);
             callback(error);
         } else {
-            console.log(`Successfully converted to FlatGeobuf: ${outputFlatGeobuf}`);
+            console.log(`✔ FGB ${outputFlatGeobuf}`);
             callback(null);
         }
     });
