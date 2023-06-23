@@ -129,15 +129,9 @@ function calculateStats(features) {
       }
 
       Object.keys(tags).forEach((k) => {
-        if (!(k in Object.keys(stats.tags))) {
-          stats.tags[k] = 0;
-        }
-        stats.tags[k] += 1;
+        stats.tags[k] = (stats.tags[k] || 0) + 1;
       });
-      if (!(user in Object.keys(stats.users))) {
-        stats.users[user] = 0;
-      }
-      stats.users[user] += 1;
+      stats.users[user] = (stats.users[user] || 0) + 1;
     }
   }
   return stats;
