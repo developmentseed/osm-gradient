@@ -1,0 +1,21 @@
+{
+  "name": "tardis-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "flatgeobuf": "^3.26.2",
+    "maplibre-gl": "^3.3.1",
+    "preact": "^10.16.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.5.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  }
+}
