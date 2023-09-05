@@ -34,6 +34,6 @@ jobs:
 
     steps:
       - name: Deploy to surge
-        run: cd web-vite && yarn deploy
+        run: yarn deploy
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
