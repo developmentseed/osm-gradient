@@ -32,9 +32,5 @@ export function Map(props: MapProps) {
     });
   }, [mapRef]);
 
-  return (
-    <>
-      <div id="map"></div>
-    </>
-  );
+  return <div id="map"></div>;
 }
