@@ -29,11 +29,6 @@ jobs:
         run: yarn install
         working-directory: web-vite
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Deploy to surge
         run: yarn deploy
         working-directory: web-vite
