@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Builds app
+      - name: Install dependencies
         run: cd web-vite && yarn install && yarn build
 
   deploy:
@@ -20,8 +20,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: peaceiris/actions-gh-pages@v3
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
         with:
-          personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+          cache-dependency-path: web-vite/yarn.lock
+
+      - name: Build
+        run: cd web-vite && yarn install && yarn build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./web-vite/dist
