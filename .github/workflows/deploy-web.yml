@@ -26,7 +26,8 @@ jobs:
           cache-dependency-path: web-vite/yarn.lock
 
       - name: Install Dependencies
-        run: cd web-vite && yarn install
+        run: yarn install
+        working-directory: web-vite
 
   deploy:
     needs: build
@@ -35,5 +36,6 @@ jobs:
     steps:
       - name: Deploy to surge
         run: yarn deploy
+        working-directory: web-vite
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
