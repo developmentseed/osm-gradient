@@ -1764,6 +1764,11 @@ url-parse-as-address@1.0.0:
   resolved "https://registry.yarnpkg.com/url-parse-as-address/-/url-parse-as-address-1.0.0.tgz#fb80901883f338b3cbed3538f5faa26adaf7f2e7"
   integrity sha512-1WJ8YX1Kcec9wgxy8d/ATzGP1ayO6BRnd3iB6NlM+7cOnn6U8p5PKppRTCPLobh3CSdJ4d0TdPjopzyU2KcVFw==
 
+use-reducer-async@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/use-reducer-async/-/use-reducer-async-2.1.1.tgz#c90eb7af3a7ef23c772b2712a9d56b03a0e272aa"
+  integrity sha512-oPSFzOIEPgMenQkMHzqeRgsQLSpcyGkspAnyTWP4l1tKlt31wMVMz6wWj6g/jea/Ms7lRvBz4AL+Okt83Tntig==
+
 uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"

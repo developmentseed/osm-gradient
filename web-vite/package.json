@@ -12,7 +12,8 @@
   "dependencies": {
     "flatgeobuf": "^3.26.2",
     "maplibre-gl": "^3.3.1",
-    "preact": "^10.16.0"
+    "preact": "^10.16.0",
+    "use-reducer-async": "^2.1.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",

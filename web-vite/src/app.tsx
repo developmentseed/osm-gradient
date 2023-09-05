@@ -1,10 +1,9 @@
-import { useReducer } from "preact/hooks";
 import "./app.css";
 import { Map } from "./map";
-import { appInitialState, appReducer } from "./reducer";
+import { useAppReducer } from "./reducer";
 
 export function App() {
-  const [appState, dispatchAppState] = useReducer(appReducer, appInitialState);
+  const [appState, dispatchAppState] = useAppReducer();
 
   return (
     <>
