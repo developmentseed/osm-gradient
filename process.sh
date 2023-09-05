@@ -27,18 +27,15 @@ export -f fetchOscFunction
 seq $end_num $start_num | parallel fetchOscFunction
 
 # Parse .osc files and collect into a single geojson using parser.js and jq
-echo '{ "type": "FeatureCollection", "features": [' > /tmp/final_geojson.json
-
 echo 'Parsing files'
 for (( i=start_num; i>end_num; i-- )); do
     echo $i
     file_path="/tmp/${i}.osc"
-    node parser.js $file_path | jq '.features[]' >> /tmp/final_geojson.json
-    # Add a comma between geojsons except for the last one
-    if [[ "$i" -ne "$((end_num+1))" ]]; then
-        echo ',' >> /tmp/final_geojson.json
-    fi
+    node parser.js $file_path >> "/tmp/${i}.geojson"
 done
 echo 'Done parsing files'
 
-echo '] }' >> /tmp/final_geojson.json
+echo "Combining files"
+echo '{ "type": "FeatureCollection", "features":' > /tmp/final_geojson.json
+jq -s '.[0].features|flatten' /tmp/*.geojson >> /tmp/final_geojson.json
+echo '}' >> /tmp/final_geojson.json

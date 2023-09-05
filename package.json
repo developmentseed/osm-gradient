@@ -12,5 +12,8 @@
     "axios": "^1.5.0",
     "osm-adiff-parser": "^1.1.0",
     "real-changesets-parser": "https://github.com/developmentseed/real-changesets-parser.git"
+  },
+  "devDependencies": {
+    "geojson-validation": "^1.0.2"
   }
 }

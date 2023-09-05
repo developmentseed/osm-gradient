@@ -461,6 +461,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"geojson-validation@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "geojson-validation@npm:1.0.2"
+  bin:
+    gjv: bin/gjv
+  checksum: cb924cda1483862f297068c6403a6288e3978048e240c1e6b93d3a406243389eacb8675a4ae766a36387218670470192fe86d4ebf961741ff87e6141831e36f1
+  languageName: node
+  linkType: hard
+
 "glob@npm:^10.2.2":
   version: 10.3.4
   resolution: "glob@npm:10.3.4"
@@ -919,6 +928,7 @@ __metadata:
   resolution: "osmtardis@workspace:."
   dependencies:
     axios: ^1.5.0
+    geojson-validation: ^1.0.2
     osm-adiff-parser: ^1.1.0
     real-changesets-parser: "https://github.com/developmentseed/real-changesets-parser.git"
   languageName: unknown
