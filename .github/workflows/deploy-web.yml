@@ -1,0 +1,36 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+          cache-dependency-path: web-vite/yarn.lock
+
+      - name: Install Dependencies
+        run: yarn install
+        working-directory: web-vite
+
+      - name: Deploy to surge
+        run: yarn deploy
+        working-directory: web-vite
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
