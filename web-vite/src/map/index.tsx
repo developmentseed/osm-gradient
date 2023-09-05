@@ -1,11 +1,18 @@
 import { useEffect, useRef } from "preact/hooks";
 import MapLibreGL from "maplibre-gl";
+import { AppActionTypes, AppState } from "../reducer";
 
-export function Map() {
+interface MapProps {
+  appState: AppState;
+  dispatchAppState: any;
+}
+
+export function Map(props: MapProps) {
+  const { appState, dispatchAppState } = props;
   const mapRef = useRef();
 
   useEffect(() => {
-    if (mapRef?.current) return;
+    if (appState.map) return;
 
     // basic MapLibre map
     const map = new MapLibreGL.Map({
@@ -18,7 +25,10 @@ export function Map() {
     });
 
     map.on("load", () => {
-      mapRef.current = map;
+      dispatchAppState({
+        type: AppActionTypes.SET_MAP_REF,
+        data: map,
+      });
     });
   }, [mapRef]);
 
