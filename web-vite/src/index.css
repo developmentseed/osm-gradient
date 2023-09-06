@@ -102,12 +102,15 @@ body {
   border-top: 2px solid rgba(255, 255, 255, 0.30);
   padding-top: 1rem;
 }
-.panel section ~ section {
+.panel article > section ~ section {
   margin-top: 2rem;
 }
-.panel input[type="date"] {
+input {
   border-radius: 0.25rem;
   padding: 0.125rem 0.5rem;
+  background: var(--bg-dark);
+  color: var(--base-light);
+  border: 1px solid var(--bg-light);
 }
 .stats table {
   color: var(--base-light);
