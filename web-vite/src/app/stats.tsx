@@ -16,65 +16,84 @@ export function Stats({ stats }) {
   });
 
   return (
-    <div class="stats">
-      <h2>Feature Stats</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Buildings</td>
-            <td>{stats.buildingsAdded} added</td>
-            <td>{stats.buildingsModified} modified</td>
-            <td>{stats.buildingsDeleted} deleted</td>
-          </tr>
-          <tr>
-            <td>Highways</td>
-            <td>{stats.highwaysAdded} added</td>
-            <td>{stats.highwaysModified} modified</td>
-            <td>{stats.highwaysDeleted} deleted</td>
-          </tr>
-          <tr>
-            <td>Other</td>
-            <td>{stats.otherAdded} added</td>
-            <td>{stats.otherModified} modified</td>
-            <td>{stats.otherDeleted} deleted</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2>Tag Stats</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Tag</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedTags.map((k) => (
+    <article class="stats">
+      <div class="stats__heading">
+        <h2>Results</h2>
+        <p>
+          <small>As of: {new Date().toLocaleDateString()}</small>
+        </p>
+      </div>
+      <section>
+        <h3>Feature Stats</h3>
+        <table>
+          <thead>
             <tr>
-              <td>{k[0]}</td>
-              <td>{k[1]}</td>
+              <th>Feature</th>
+              <th>Added</th>
+              <th>Modified</th>
+              <th>Deleted</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <h2>User Stats</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Features</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedUsers.map((k) => (
+          </thead>
+          <tbody>
             <tr>
-              <td>{k[0]}</td>
-              <td>{k[1]}</td>
+              <td>Buildings</td>
+              <td>{stats.buildingsAdded}</td>
+              <td>{stats.buildingsModified}</td>
+              <td>{stats.buildingsDeleted} </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+            <tr>
+              <td>Highways</td>
+              <td>{stats.highwaysAdded} </td>
+              <td>{stats.highwaysModified} </td>
+              <td>{stats.highwaysDeleted} </td>
+            </tr>
+            <tr>
+              <td>Other</td>
+              <td>{stats.otherAdded} </td>
+              <td>{stats.otherModified} </td>
+              <td>{stats.otherDeleted} </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h3>Tag Stats</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Tag</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedTags.map((k) => (
+              <tr>
+                <td>{k[0]}</td>
+                <td>{k[1]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h3>User Stats</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Features</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedUsers.map((k) => (
+              <tr>
+                <td>{k[0]}</td>
+                <td>{k[1]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    </article>
   );
 }
