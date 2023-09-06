@@ -1,4 +1,6 @@
-export function fgBoundingBox(map: any) {
+import { geojson as flatgeobuf } from "flatgeobuf";
+
+export function fbgBbox(map: any) {
   const { lng, lat } = map.getCenter();
   const { _sw, _ne } = map.getBounds();
   const distanceX =
@@ -11,4 +13,25 @@ export function fgBoundingBox(map: any) {
     maxX: lng + distanceX,
     maxY: lat + distanceY,
   };
+}
+
+export async function getFgbData(map: any) {
+  let i = 0;
+  const fc = { type: "FeatureCollection", features: [] };
+
+  let iter = flatgeobuf.deserialize("public/sample-data.fgb", fbgBbox(map));
+
+  for await (let feature of iter) {
+    if (
+      feature.properties.type !== "relation" &&
+      (feature.properties.changeType === "added" ||
+        feature.properties.changeType === "modifiedNew" ||
+        feature.properties.changeType === "deletedNew")
+    ) {
+      fc.features = fc.features.concat({ ...feature, id: i });
+      i += 1;
+    }
+  }
+
+  return fc;
 }

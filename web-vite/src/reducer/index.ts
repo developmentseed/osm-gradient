@@ -1,7 +1,6 @@
 import { useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
-import { geojson as flatgeobuf } from "flatgeobuf";
-import { fgBoundingBox } from "../map/utils.ts";
+import { getFgbData } from "../map/utils.ts";
 
 export interface AppState {
   map: any;
@@ -63,25 +62,7 @@ const asyncActionHandlers: any = {
           data: { map },
         });
 
-        let i = 0;
-        const fc = { type: "FeatureCollection", features: [] };
-
-        let iter = flatgeobuf.deserialize(
-          "public/sample-data.fgb",
-          fgBoundingBox(map)
-        );
-
-        for await (let feature of iter) {
-          if (
-            feature.properties.type !== "relation" &&
-            (feature.properties.changeType === "added" ||
-              feature.properties.changeType === "modifiedNew" ||
-              feature.properties.changeType === "deletedNew")
-          ) {
-            fc.features.push({ ...feature, id: i });
-            i += 1;
-          }
-        }
+        const fc = await getFgbData(map);
 
         map.getSource("data").setData(fc);
 
