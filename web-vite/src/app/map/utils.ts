@@ -51,6 +51,9 @@ function calculateStats(features) {
     highwaysAdded: 0,
     highwaysModified: 0,
     highwaysDeleted: 0,
+    otherAdded: 0,
+    otherModified: 0,
+    otherDeleted: 0,
     users: {},
   };
   for (let feature of features.features) {
@@ -66,25 +69,28 @@ function calculateStats(features) {
       if (changeType === "added") {
         if (tags.building) {
           stats.buildingsAdded += 1;
-        }
-        if (tags.highway) {
+        } else if (tags.highway) {
           stats.highwaysAdded += 1;
+        } else {
+          stats.otherAdded += 1;
         }
       }
       if (changeType === "modifiedNew") {
         if (tags.building) {
           stats.buildingsModified += 1;
-        }
-        if (tags.highway) {
+        } else if (tags.highway) {
           stats.highwaysModified += 1;
+        } else {
+          stats.otherModified += 1;
         }
       }
       if (changeType === "deletedNew") {
         if (tags.building) {
           stats.buildingsDeleted += 1;
-        }
-        if (tags.highway) {
+        } else if (tags.highway) {
           stats.highwaysDeleted += 1;
+        } else {
+          stats.otherDeleted += 1;
         }
       }
 
