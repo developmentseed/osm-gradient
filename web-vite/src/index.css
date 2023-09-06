@@ -49,8 +49,8 @@ body {
 }
 .layout {
   display: grid;
-  grid-template-columns: 24rem 1fr;
-  grid-template-rows: 3.5rem minmax(10px, 1fr);
+  grid-template-columns: 1fr;
+  grid-template-rows: 3.5rem 1fr 1fr;
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
@@ -78,6 +78,7 @@ body {
 #map {
   min-height: 480px;
   max-height: 100%;
+  grid-row: 2;
 }
 
 .panel {
@@ -91,6 +92,9 @@ body {
   box-shadow: 12px 0px 24px 0px rgba(68, 63, 63, 0.08),
     1px 0px 16px 0px rgba(4, 240, 255, 0.12),
     0px 0px 180px 0px rgba(0, 0, 0, 0.8) inset;
+  border-radius: 0.5rem;
+  position: relative;
+  top: -1rem;
 }
 .panel h2,
 .panel h3 {
@@ -177,5 +181,18 @@ input {
   to {
       background-position:
           100px 0;
+  }
+}
+@media screen and (min-width: 741px) {
+  .layout{
+    grid-template-columns: 24rem 1fr;
+    grid-template-rows: 3.5rem minmax(10px, 1fr);
+  }
+  #map {
+    grid-row: initial;
+  }
+  .panel {
+    border-radius: 0;
+    top: initial;
   }
 }
