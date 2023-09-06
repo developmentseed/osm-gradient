@@ -76,6 +76,34 @@ const asyncActionHandlers: any = {
         );
       }
     },
+  [AppActionTypes.UPDATE_VIEW]:
+    ({ dispatch, getState }) =>
+    async (action: AppAction) => {
+      try {
+        const map = action.data;
+
+        const state = getState();
+        console.log(state);
+
+        dispatch({
+          type: AppActionTypes.UPDATE_VIEW_START,
+          data: { map },
+        });
+
+        const fc = await getFgbData(map);
+
+        map.getSource("data").setData(fc);
+
+        dispatch({
+          type: AppActionTypes.UPDATE_VIEW_SUCCESS,
+        });
+      } catch (error) {
+        console.log(error);
+        alert(
+          "Unexpected error while loading the map, please see console log."
+        );
+      }
+    },
 };
 
 export const useAppReducer = () => {

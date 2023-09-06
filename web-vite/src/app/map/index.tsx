@@ -84,6 +84,13 @@ export function Map(props: MapProps) {
         },
       });
 
+      map.on("moveend", () => {
+        dispatchAppState({
+          type: AppActionTypes.UPDATE_VIEW,
+          data: map,
+        });
+      });
+
       dispatchAppState({
         type: AppActionTypes.LOAD_MAP,
         data: map,
