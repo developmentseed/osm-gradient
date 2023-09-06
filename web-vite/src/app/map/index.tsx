@@ -84,41 +84,6 @@ export function Map(props: MapProps) {
         },
       });
 
-      // function onClick(e) {
-      //   const props = e.features[0].properties;
-      //   let tags = "";
-      //   let tagObject = JSON.parse(props.tags);
-      //   for (const [key, value] of Object.entries(tagObject)) {
-      //     tags = tags + "<dt>" + key + "=" + value + "</dt>";
-      //   }
-      //   const html = `<dl><dt><b>action:</b> ${props.action}</dt>
-      //   <dt><b>id:</b> ${props.id}</dt>
-      //   <dt><b>user:</b> ${props.user}<dt>
-      //   <br />
-      //   ${tags}
-      //   </dl>`;
-      //   new MapLibreGL.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
-      // }
-
-      // map.on("click", "data-point", onClick);
-      // map.on("click", "data-fill", onClick);
-      // map.on("click", "data-line", onClick);
-
-      // // if the user is panning around alot, only update once per second max
-      // updateResults = _.throttle(updateResults, 1000);
-
-      // // show a rectangle corresponding to our bounding box
-      // map.getSource("rectangle").setData(getRect());
-
-      // // show results based on the initial map
-      // updateResults();
-
-      // // ...and update the results whenever the map moves
-      // map.on("moveend", function (s) {
-      //   map.getSource("rectangle").setData(getRect());
-      //   updateResults();
-      // });
-
       dispatchAppState({
         type: AppActionTypes.LOAD_MAP,
         data: map,
