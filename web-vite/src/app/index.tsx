@@ -1,4 +1,4 @@
-import "./app.css";
+import "./index.css";
 import { Map } from "./map";
 import { useAppReducer } from "./reducer";
 

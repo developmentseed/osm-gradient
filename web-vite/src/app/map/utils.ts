@@ -33,5 +33,7 @@ export async function getFgbData(map: any) {
     }
   }
 
+  console.log({ fc });
+
   return fc;
 }
