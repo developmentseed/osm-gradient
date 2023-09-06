@@ -1,7 +1,10 @@
-import "./index.css";
-import { Map } from "./map";
-import { MapStatus, useAppReducer } from "./reducer";
-import { Stats } from "./stats";
+import { Header } from './components/header';
+import { Layout } from './components/layout';
+import { PanelInputs } from './inputs';
+import { Map } from './map';
+import { Panel } from './panel';
+import { MapStatus, useAppReducer } from './reducer';
+import { Stats } from './stats';
 
 export function App() {
   const [appState, dispatchAppState] = useAppReducer();
@@ -9,12 +12,18 @@ export function App() {
   const { mapStatus, stats } = appState;
 
   return (
-    <>
+    <Layout>
+      <Header />
+      <Panel>
+        <PanelInputs />
+        {mapStatus === MapStatus.READY && stats && (
+          <Stats stats={appState.stats} />
+        )}
+      </Panel>
       <Map appState={appState} dispatchAppState={dispatchAppState} />
-      {mapStatus === MapStatus.READY && stats && (
-        <Stats stats={appState.stats} />
+      {mapStatus === MapStatus.LOADING && (
+        <div style={{ position: 'absolute' }}>Loading...</div>
       )}
-      {mapStatus === MapStatus.LOADING && <div>Loading...</div>}
-    </>
+    </Layout>
   );
 }

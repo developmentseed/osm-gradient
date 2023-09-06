@@ -1,40 +1,142 @@
+/*
+  Reset: https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img, picture, video,
+canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+input, button, textarea, select {
+  font: inherit;
+}
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  font-size: 1rem;
+}
+#root, #__next {
+  isolation: isolate;
+}
+/* End Reset */
+
+:root {
+  --base: ;
+  --base-light: #f4f4f4;
+  --bg-dark: #051730;
+  --bg-light: #eae9ee;
+  --font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+}
+
+html {
+  font-family: var(--font-family);
+}
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  height: 100vh;
 }
-
-h2 {
-  margin: 10px;
-  font-size: 1.5em;
+.layout {
+  display: grid;
+  grid-template-columns: 24rem 1fr;
+  grid-template-rows: 3.5rem minmax(10px, 1fr);
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+.page-header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 3.5rem;
+  grid-column: 1 / -1;
+  padding: 0 1.5rem;
+  z-index: 50;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, rgba(17, 181, 255, 0.14) 100%), var(--bg-dark);
+  background-blend-mode: hard-light, normal;
+}
+.page-header__headline {
+  font-size: 1.24rem;
+  font-weight: normal;
+  letter-spacing: 0.625rem;
+  text-transform: uppercase;
+  color: var(--base-light);
 }
 
 #map {
-  height: 480px;
+  min-height: 480px;
+  max-height: 100%;
 }
 
-table {
-  margin: 25px;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+.panel {
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 2rem 1.5rem;
+  background: var(--bg-dark);
+  color: var(--base-light);
+  overflow: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 12px 0px 24px 0px rgba(68, 63, 63, 0.08),
+    1px 0px 16px 0px rgba(4, 240, 255, 0.12),
+    0px 0px 180px 0px rgba(0, 0, 0, 0.8) inset;
 }
-
-thead tr {
-  background-color: #009879;
-  color: #ffffff;
+.panel h2,
+.panel h3 {
+  text-transform: uppercase;
+  font-weight: 900;
+}
+.panel article ~ article {
+  margin-top: 1rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.30);
+  padding-top: 1rem;
+}
+.panel section ~ section {
+  margin-top: 2rem;
+}
+.panel input[type="date"] {
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.5rem;
+}
+.stats table {
+  color: var(--base-light);
+  font-size: 0.875rem;
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  line-height: 1.25rem;
+  margin: 0.25rem 0;
+}
+.stats table th {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
   text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-tbody tr {
-  border-bottom: 1px solid #dddddd;
+.stats table th:not(:first-child),
+.stats table td:not(:first-child) {
+  text-align: right;
 }
 
-tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
+.stats__heading {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
-
-tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
+.stats__heading h2 {
+  font-size: 1.125rem;
 }
