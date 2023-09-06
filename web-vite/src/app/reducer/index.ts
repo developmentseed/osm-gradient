@@ -26,6 +26,15 @@ export type AppAction =
     }
   | {
       type: AppActionTypes.LOAD_MAP_SUCCESS;
+      data: {
+        stats: any;
+      };
+    }
+  | {
+      type: AppActionTypes.UPDATE_VIEW_SUCCESS;
+      data: {
+        stats: any;
+      };
     };
 
 export const appInitialState = {
@@ -35,18 +44,25 @@ export const appInitialState = {
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
 
 function appReducer(state: AppState, action: AppAction) {
+  const nextState = { ...state };
   switch (action.type) {
     case AppActionTypes.LOAD_MAP_START:
       return {
-        ...state,
+        ...nextState,
         map: action.data.map,
       };
     case AppActionTypes.LOAD_MAP_SUCCESS:
       return {
-        ...state,
+        ...nextState,
+        stats: action.data.stats,
+      };
+    case AppActionTypes.UPDATE_VIEW_SUCCESS:
+      return {
+        ...nextState,
+        stats: action.data.stats,
       };
     default:
-      return state;
+      return nextState;
   }
 }
 
@@ -62,12 +78,13 @@ const asyncActionHandlers: any = {
           data: { map },
         });
 
-        const fc = await getFgbData(map);
+        const { geojson, stats } = await getFgbData(map);
 
-        map.getSource("data").setData(fc);
+        map.getSource("data").setData(geojson);
 
         dispatch({
           type: AppActionTypes.LOAD_MAP_SUCCESS,
+          data: { stats },
         });
       } catch (error) {
         console.log(error);
@@ -82,20 +99,18 @@ const asyncActionHandlers: any = {
       try {
         const map = action.data;
 
-        const state = getState();
-        console.log(state);
-
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_START,
           data: { map },
         });
 
-        const fc = await getFgbData(map);
+        const { geojson, stats } = await getFgbData(map);
 
-        map.getSource("data").setData(fc);
+        map.getSource("data").setData(geojson);
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_SUCCESS,
+          data: { stats },
         });
       } catch (error) {
         console.log(error);
