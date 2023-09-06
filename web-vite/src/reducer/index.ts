@@ -1,6 +1,6 @@
 import { useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
-import { generic as flatgeobuf } from "flatgeobuf";
+import { geojson as flatgeobuf } from "flatgeobuf";
 import { fgBoundingBox } from "../map/utils.ts";
 
 export interface AppState {
@@ -57,7 +57,6 @@ const asyncActionHandlers: any = {
     async (action: AppAction) => {
       try {
         const map = action.data;
-        console.log({ flatgeobuf });
 
         dispatch({
           type: AppActionTypes.LOAD_MAP_START,
@@ -66,10 +65,12 @@ const asyncActionHandlers: any = {
 
         let i = 0;
         const fc = { type: "FeatureCollection", features: [] };
-        let iter = await flatgeobuf.deserialize(
+
+        let iter = flatgeobuf.deserialize(
           "public/sample-data.fgb",
           fgBoundingBox(map)
         );
+
         for await (let feature of iter) {
           if (
             feature.properties.type !== "relation" &&
@@ -82,15 +83,13 @@ const asyncActionHandlers: any = {
           }
         }
 
-        console.log(fc);
-
-        // const stats = calculateStats(fc);
+        map.getSource("data").setData(fc);
 
         dispatch({
           type: AppActionTypes.LOAD_MAP_SUCCESS,
         });
       } catch (error) {
-        console.log({ error });
+        console.log(error);
         alert(
           "Unexpected error while loading the map, please see console log."
         );
