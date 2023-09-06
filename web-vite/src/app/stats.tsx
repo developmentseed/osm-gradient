@@ -47,6 +47,12 @@ export function Stats({ stats }) {
               <td>{stats.highwaysModified} </td>
               <td>{stats.highwaysDeleted} </td>
             </tr>
+            <tr>
+              <td>Other</td>
+              <td>{stats.otherAdded} </td>
+              <td>{stats.otherModified} </td>
+              <td>{stats.otherDeleted} </td>
+            </tr>
           </tbody>
         </table>
       </section>
