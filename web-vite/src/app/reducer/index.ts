@@ -31,6 +31,12 @@ export type AppAction =
       };
     }
   | {
+      type: AppActionTypes.UPDATE_VIEW;
+    }
+  | {
+      type: AppActionTypes.UPDATE_VIEW_START;
+    }
+  | {
       type: AppActionTypes.UPDATE_VIEW_SUCCESS;
       data: {
         stats: any;
@@ -94,14 +100,13 @@ const asyncActionHandlers: any = {
       }
     },
   [AppActionTypes.UPDATE_VIEW]:
-    ({ dispatch, getState }) =>
+    ({ dispatch, getState }: any) =>
     async (action: AppAction) => {
       try {
-        const map = action.data;
+        const map = getState().map;
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_START,
-          data: { map },
         });
 
         const { geojson, stats } = await getFgbData(map);
