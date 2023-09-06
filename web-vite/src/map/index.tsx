@@ -7,6 +7,14 @@ interface MapProps {
   dispatchAppState: any;
 }
 
+const MAP_OPTIONS = {
+  center: [-74.5087291, 40.28],
+  zoom: 14,
+} as {
+  center: [number, number];
+  zoom: number;
+};
+
 export function Map(props: MapProps) {
   const { appState, dispatchAppState } = props;
 
@@ -19,8 +27,8 @@ export function Map(props: MapProps) {
     const map = new MapLibreGL.Map({
       container: "map",
       style: "https://demotiles.maplibre.org/style.json",
-      center: [0, 30],
-      zoom: 2,
+      center: MAP_OPTIONS.center,
+      zoom: MAP_OPTIONS.zoom,
       maxZoom: 18,
       minZoom: 0,
     });
