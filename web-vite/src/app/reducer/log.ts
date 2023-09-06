@@ -16,6 +16,8 @@ export default function logReducer(reducer: any) {
       nextState
     );
     console.groupEnd();
+
+    return nextState;
   };
   /* eslint-enable no-console */
 }
