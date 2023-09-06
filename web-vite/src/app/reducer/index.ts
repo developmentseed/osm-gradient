@@ -7,10 +7,7 @@ export interface AppState {
 }
 
 export enum AppActionTypes {
-  LOAD_MAP = "LOAD_MAP",
-  LOAD_MAP_START = "LOAD_MAP_START",
-  LOAD_MAP_SUCCESS = "LOAD_MAP_SUCCESS",
-  LOAD_MAP_ERROR = "LOAD_MAP_ERROR",
+  SET_MAP_REF = "SET_MAP_REF",
   UPDATE_VIEW = "UPDATE_VIEW",
   UPDATE_VIEW_START = "UPDATE_VIEW_START",
   UPDATE_VIEW_SUCCESS = "UPDATE_VIEW_SUCCESS",
@@ -19,15 +16,9 @@ export enum AppActionTypes {
 
 export type AppAction =
   | {
-      type: AppActionTypes.LOAD_MAP_START;
+      type: AppActionTypes.SET_MAP_REF;
       data: {
         map: any;
-      };
-    }
-  | {
-      type: AppActionTypes.LOAD_MAP_SUCCESS;
-      data: {
-        stats: any;
       };
     }
   | {
@@ -52,15 +43,10 @@ export type AppReducer<State, Action> = (state: State, action: Action) => State;
 function appReducer(state: AppState, action: AppAction) {
   const nextState = { ...state };
   switch (action.type) {
-    case AppActionTypes.LOAD_MAP_START:
+    case AppActionTypes.SET_MAP_REF:
       return {
         ...nextState,
         map: action.data.map,
-      };
-    case AppActionTypes.LOAD_MAP_SUCCESS:
-      return {
-        ...nextState,
-        stats: action.data.stats,
       };
     case AppActionTypes.UPDATE_VIEW_SUCCESS:
       return {
@@ -73,35 +59,9 @@ function appReducer(state: AppState, action: AppAction) {
 }
 
 const asyncActionHandlers: any = {
-  [AppActionTypes.LOAD_MAP]:
-    ({ dispatch, getState }) =>
-    async (action: AppAction) => {
-      try {
-        const map = action.data;
-
-        dispatch({
-          type: AppActionTypes.LOAD_MAP_START,
-          data: { map },
-        });
-
-        const { geojson, stats } = await getFgbData(map);
-
-        map.getSource("data").setData(geojson);
-
-        dispatch({
-          type: AppActionTypes.LOAD_MAP_SUCCESS,
-          data: { stats },
-        });
-      } catch (error) {
-        console.log(error);
-        alert(
-          "Unexpected error while loading the map, please see console log."
-        );
-      }
-    },
   [AppActionTypes.UPDATE_VIEW]:
     ({ dispatch, getState }: any) =>
-    async (action: AppAction) => {
+    async () => {
       try {
         const map = getState().map;
 
