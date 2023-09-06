@@ -19,8 +19,11 @@ export function Map(props: MapProps) {
   const { appState, dispatchAppState } = props;
 
   useEffect(() => {
-    // Return early if we already have a map
+    // When the map is already initialized, do a first view update
     if (appState && appState.map) {
+      dispatchAppState({
+        type: AppActionTypes.UPDATE_VIEW,
+      });
       return;
     }
 
@@ -87,13 +90,12 @@ export function Map(props: MapProps) {
       map.on("moveend", () => {
         dispatchAppState({
           type: AppActionTypes.UPDATE_VIEW,
-          data: map,
         });
       });
 
       dispatchAppState({
-        type: AppActionTypes.LOAD_MAP,
-        data: map,
+        type: AppActionTypes.SET_MAP_REF,
+        data: { map },
       });
     });
   }, [appState?.map]);
