@@ -1,5 +1,5 @@
 export function Stats({ stats, loading }) {
-  if (!loading || !stats){
+  if (loading || !stats){
     return (
       <article class="stats">
         <div class="stats__heading">
