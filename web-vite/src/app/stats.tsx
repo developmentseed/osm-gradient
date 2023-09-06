@@ -39,7 +39,7 @@ export function Stats({ stats, loading }) {
               </tr>
             </thead>
             <tbody>
-              {Array.from(Array(16).keys()).map((x) => {
+              {Array.from(Array(12).keys()).map((x) => {
                 return (<tr key={x}>
                   <td class="loading" />
                   <td class="loading" />

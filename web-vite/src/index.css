@@ -143,9 +143,11 @@ input {
 }
 .stats__heading h2 {
   font-size: 1.125rem;
+  width: 100%;
 }
 .stats__heading p {
   justify-self: flex-end;
+  white-space: pre;
 } 
 
 .loading {
