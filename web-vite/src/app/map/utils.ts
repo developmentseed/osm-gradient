@@ -19,7 +19,10 @@ export async function getFgbData(map: any) {
   let i = 0;
   const fc = { type: "FeatureCollection", features: [] };
 
-  let iter = flatgeobuf.deserialize("public/sample-data.fgb", fbgBbox(map));
+  let iter = flatgeobuf.deserialize(
+    "https://storage.googleapis.com/osm-tardis/2013-02-03T15%3A00.fgb",
+    fbgBbox(map)
+  );
 
   for await (let feature of iter) {
     if (
@@ -32,8 +35,6 @@ export async function getFgbData(map: any) {
       i += 1;
     }
   }
-
-  console.log({ fc });
 
   return fc;
 }
