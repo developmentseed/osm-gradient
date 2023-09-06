@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import MapLibreGL from "maplibre-gl";
 import { AppActionTypes, AppState } from "../reducer";
 

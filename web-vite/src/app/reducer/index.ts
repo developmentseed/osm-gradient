@@ -2,8 +2,15 @@ import { useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
 import { getFgbData } from "../map/utils.ts";
 
+export enum MapStatus {
+  IDLE = "IDLE",
+  LOADING = "LOADING",
+  READY = "READY",
+}
+
 export interface AppState {
   map: any;
+  mapStatus: MapStatus;
 }
 
 export enum AppActionTypes {
@@ -36,6 +43,7 @@ export type AppAction =
 
 export const appInitialState = {
   map: undefined,
+  mapStatus: MapStatus.IDLE,
 };
 
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
@@ -47,11 +55,18 @@ function appReducer(state: AppState, action: AppAction) {
       return {
         ...nextState,
         map: action.data.map,
+        mapStatus: MapStatus.READY,
+      };
+    case AppActionTypes.UPDATE_VIEW_START:
+      return {
+        ...nextState,
+        mapStatus: MapStatus.LOADING,
       };
     case AppActionTypes.UPDATE_VIEW_SUCCESS:
       return {
         ...nextState,
         stats: action.data.stats,
+        mapStatus: MapStatus.READY,
       };
     default:
       return nextState;
@@ -63,7 +78,12 @@ const asyncActionHandlers: any = {
     ({ dispatch, getState }: any) =>
     async () => {
       try {
-        const map = getState().map;
+        const { map, mapStatus } = getState();
+
+        // Only update the view if the map is ready
+        if (mapStatus !== MapStatus.READY) {
+          return;
+        }
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_START,
