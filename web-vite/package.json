@@ -21,7 +21,6 @@
   "devDependencies": {
     "@babel/runtime": "^7.22.15",
     "@preact/preset-vite": "^2.5.0",
-    "@types/lodash": "^4.14.198",
     "@types/lodash.get": "^4.4.7",
     "surge": "^0.23.1",
     "typescript": "^5.0.2",
