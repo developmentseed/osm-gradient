@@ -1,13 +1,33 @@
 export function Stats({ stats, loading }) {
-  if (loading || !stats){
+  if (loading || !stats) {
     return (
       <article class="stats">
         <div class="stats__heading">
           <h2>Results</h2>
           <p class="loading" />
         </div>
-        <section >
+        <section>
           <h3>Feature Stats</h3>
+          <ul class="bar-chart">
+            <li class="bar-chart__bar">
+              <span class="loading"></span>
+              <span class="loading"></span>
+              <span class="loading"></span>
+              <span class="loading"></span>
+            </li>
+            <li class="bar-chart__bar">
+              <span class="loading"></span>
+              <span class="loading"></span>
+              <span class="loading"></span>
+              <span class="loading"></span>
+            </li>
+            <li class="bar-chart__bar">
+              <span class="loading"></span>
+              <span class="loading"></span>
+              <span class="loading"></span>
+              <span class="loading"></span>
+            </li>
+          </ul>
           <table class="loading__wrapper">
             <thead>
               <tr>
@@ -19,17 +39,19 @@ export function Stats({ stats, loading }) {
             </thead>
             <tbody>
               {Array.from(Array(3).keys()).map((x) => {
-                return (<tr key={x}>
-                  <td class="loading" />
-                  <td class="loading" />
-                  <td class="loading" />
-                  <td class="loading" />
-                </tr>)
+                return (
+                  <tr key={x}>
+                    <td class="loading" />
+                    <td class="loading" />
+                    <td class="loading" />
+                    <td class="loading" />
+                  </tr>
+                );
               })}
             </tbody>
           </table>
         </section>
-        <section >
+        <section>
           <h3>Tag Stats</h3>
           <table class="loading__wrapper">
             <thead>
@@ -78,6 +100,32 @@ export function Stats({ stats, loading }) {
       </div>
       <section>
         <h3>Feature Stats</h3>
+        <ul class="bar-chart">
+          <li class="bar-chart__bar">
+            <span class="bar-chart__bar--label">Buildings</span>
+            <div class="bar-chart__bar--value">
+              <span class="bar-chart__bar--val1" style={`flex-basis: ${(stats.buildingsAdded / stats.buildings) * 100}%`}></span>
+              <span class="bar-chart__bar--val2" style={`flex-basis: ${(stats.buildingsModified / stats.buildings) * 100}%`}></span>
+              <span class="bar-chart__bar--val3" style={`flex-basis: ${(stats.buildingsDeleted / stats.buildings) * 100}%`}></span>
+            </div>
+          </li>
+          <li class="bar-chart__bar">
+            <span class="bar-chart__bar--label">Highways</span>
+            <div class="bar-chart__bar--value">
+              <span class="bar-chart__bar--val1" style={`flex-basis: ${(stats.highwaysAdded / stats.highways) * 100}%`}></span>
+              <span class="bar-chart__bar--val2" style={`flex-basis: ${(stats.highwaysModified / stats.highways) * 100}%`}></span>
+              <span class="bar-chart__bar--val3" style={`flex-basis: ${(stats.highwaysDeleted / stats.highways) * 100}%`}></span>
+            </div>
+          </li>
+          <li class="bar-chart__bar">
+            <span class="bar-chart__bar--label">Other</span>
+            <div class="bar-chart__bar--value">
+              <span class="bar-chart__bar--val1" style={`flex-basis: ${(stats.otherAdded / stats.other) * 100}%`}></span>
+              <span class="bar-chart__bar--val2" style={`flex-basis: ${(stats.otherModified / stats.other) * 100}%`}></span>
+              <span class="bar-chart__bar--val3" style={`flex-basis: ${(stats.otherDeleted / stats.other) * 100}%`}></span>
+            </div>
+          </li>
+        </ul>
         <table>
           <thead>
             <tr>
