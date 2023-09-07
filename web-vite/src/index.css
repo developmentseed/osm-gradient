@@ -81,6 +81,20 @@ body {
   max-height: 100%;
   grid-row: 2;
 }
+.maplibregl-popup-content {
+  padding: 1.25rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 1rem 0 rgba(50,50,50,.125);
+  font-size: 0.875rem;
+  font-family: var(--font-family);
+}
+.maplibregl-popup-close-button {
+  font-size: 2rem;
+  right: 0.25rem;
+  border-radius: 0.25rem;
+  top: 0.25rem;
+  opacity: 0.5;
+}
 
 .panel {
   display: flex;

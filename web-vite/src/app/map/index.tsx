@@ -15,6 +15,12 @@ const MAP_OPTIONS = {
   zoom: number;
 };
 
+const MAP_COLORS = {
+  modified: '#619EFF',
+  added: '#8CF8A3',
+  deleted: '#FF7A7A',
+}
+
 export function Map(props: MapProps) {
   const { appState, dispatchAppState } = props;
 
@@ -68,36 +74,108 @@ export function Map(props: MapProps) {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
       });
-      map.addLayer({
-        id: "data-point",
-        type: "circle",
-        source: "data",
-        paint: {
-          "circle-radius": 6,
-          "circle-color": "#B42222",
-        },
-        filter: ["==", "$type", "Point"],
-      });
+
       map.addLayer({
         id: "data-fill",
         type: "fill",
         source: "data",
-        filter: ["==", "$type", "Polygon"],
+        filter: ["any", ["==", "$type", "Polygon"]],
         paint: {
-          "fill-color": "#FEB24C",
+          "fill-opacity": 0.1,
+          "fill-color": [
+            "match",
+            ["get", "changeType"],
+            // Added features color
+            "added",
+            MAP_COLORS.added,
+            // Modified features color
+            "modifiedNew",
+            MAP_COLORS.modified,
+            // Removed features color
+            "deletedNew",
+            MAP_COLORS.deleted,
+            // Default color for other features
+            "#000",
+          ],
         },
       });
+
       map.addLayer({
         id: "data-line",
         type: "line",
         source: "data",
-        filter: ["==", "$type", "LineString"],
+        filter: [
+          "any",
+          ["==", "$type", "Polygon"],
+          ["==", "$type", "LineString"],
+        ],
         paint: {
-          "line-color": "#800026",
           "line-opacity": 0.8,
           "line-width": 2,
+          "line-color": [
+            "match",
+            ["get", "changeType"],
+            // Added features color
+            "added",
+            MAP_COLORS.added,
+            // Modified features color
+            "modifiedNew",
+            MAP_COLORS.modified,
+            // Removed features color
+            "deletedNew",
+            MAP_COLORS.deleted,
+            // Default color for other features
+            "#000",
+          ],
         },
       });
+
+      map.addLayer({
+        id: "data-point",
+        type: "circle",
+        source: "data",
+        filter: ["==", "$type", "Point"],
+        paint: {
+          "circle-stroke-color": [
+            "match",
+            ["get", "changeType"],
+            // Added features color
+            "added",
+            MAP_COLORS.added,
+            // Modified features color
+            "modifiedNew",
+            MAP_COLORS.modified,
+            // Removed features color
+            "deletedNew",
+            MAP_COLORS.deleted,
+            // Default color for other features
+            "#000",
+          ],
+          "circle-stroke-width": 2,
+          "circle-radius": 2,
+          "circle-opacity": 0,
+        },
+      });
+
+      function onClick(e) {
+        const props = e.features[0].properties;
+        let tags = "";
+        let tagObject = JSON.parse(props.tags);
+        for (const [key, value] of Object.entries(tagObject)) {
+          tags = tags + "<dt>" + key + "=" + value + "</dt>";
+        }
+        const html = `<dl><dt><b>action:</b> ${props.action}</dt>
+        <dt><b>id:</b> ${props.id}</dt>
+        <dt><b>user:</b> ${props.user}<dt>
+        <br />
+        ${tags}
+        </dl>`;
+        new MapLibreGL.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+      }
+
+      map.on("click", "data-point", onClick);
+      map.on("click", "data-fill", onClick);
+      map.on("click", "data-line", onClick);
 
       map.addSource("rectangle", {
         type: "geojson",
