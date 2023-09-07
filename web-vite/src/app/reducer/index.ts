@@ -15,6 +15,7 @@ export interface AppState {
 
 export enum AppActionTypes {
   SET_MAP_REF = "SET_MAP_REF",
+  SET_CURRENT_TIMESTAMP = "SET_CURRENT_TIMESTAMP",
   UPDATE_VIEW = "UPDATE_VIEW",
   UPDATE_VIEW_START = "UPDATE_VIEW_START",
   UPDATE_VIEW_SUCCESS = "UPDATE_VIEW_SUCCESS",
@@ -26,6 +27,12 @@ export type AppAction =
       type: AppActionTypes.SET_MAP_REF;
       data: {
         map: any;
+      };
+    }
+  | {
+      type: AppActionTypes.SET_CURRENT_TIMESTAMP;
+      data: {
+        currentTimestamp: string;
       };
     }
   | {
@@ -49,27 +56,39 @@ export const appInitialState = {
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
 
 function appReducer(state: AppState, action: AppAction) {
-  const nextState = { ...state };
+  // const nextState = { ...state };
+
   switch (action.type) {
     case AppActionTypes.SET_MAP_REF:
       return {
-        ...nextState,
+        ...state,
         map: action.data.map,
         mapStatus: MapStatus.READY,
       };
     case AppActionTypes.UPDATE_VIEW_START:
       return {
-        ...nextState,
+        ...state,
         mapStatus: MapStatus.LOADING,
       };
-    case AppActionTypes.UPDATE_VIEW_SUCCESS:
+    case AppActionTypes.UPDATE_VIEW_SUCCESS: {
+      const { stats } = action.data;
       return {
-        ...nextState,
+        ...state,
         stats: action.data.stats,
+        currentTimestamp: stats.timestamps[stats.timestamps.length - 1],
         mapStatus: MapStatus.READY,
       };
+    }
+    case AppActionTypes.SET_CURRENT_TIMESTAMP: {
+      const { currentTimestamp } = action.data;
+      return {
+        ...state,
+        currentTimestamp,
+        mapStatus: MapStatus.READY,
+      };
+    }
     default:
-      return nextState;
+      return { ...state };
   }
 }
 

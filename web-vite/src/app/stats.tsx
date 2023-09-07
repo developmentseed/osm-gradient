@@ -1,12 +1,19 @@
-export function Stats({ stats, loading }) {
-  if (loading || !stats){
+interface StatsProps {
+  stats: any;
+  loading: boolean;
+  currentTimestamp?: string;
+}
+
+export function Stats(props: StatsProps) {
+  const { stats, loading, currentTimestamp } = props;
+  if (loading || !stats) {
     return (
       <article class="stats">
         <div class="stats__heading">
           <h2>Results</h2>
           <p class="loading" />
         </div>
-        <section >
+        <section>
           <h3>Feature Stats</h3>
           <table class="loading__wrapper">
             <thead>
@@ -19,17 +26,19 @@ export function Stats({ stats, loading }) {
             </thead>
             <tbody>
               {Array.from(Array(3).keys()).map((x) => {
-                return (<tr key={x}>
-                  <td class="loading" />
-                  <td class="loading" />
-                  <td class="loading" />
-                  <td class="loading" />
-                </tr>)
+                return (
+                  <tr key={x}>
+                    <td class="loading" />
+                    <td class="loading" />
+                    <td class="loading" />
+                    <td class="loading" />
+                  </tr>
+                );
               })}
             </tbody>
           </table>
         </section>
-        <section >
+        <section>
           <h3>Tag Stats</h3>
           <table class="loading__wrapper">
             <thead>
@@ -40,17 +49,18 @@ export function Stats({ stats, loading }) {
             </thead>
             <tbody>
               {Array.from(Array(12).keys()).map((x) => {
-                return (<tr key={x}>
-                  <td class="loading" />
-                  <td class="loading" />
-                </tr>)
+                return (
+                  <tr key={x}>
+                    <td class="loading" />
+                    <td class="loading" />
+                  </tr>
+                );
               })}
             </tbody>
           </table>
         </section>
-
       </article>
-    )
+    );
   }
   let sortedUsers = [];
   let sortedTags = [];
@@ -73,7 +83,13 @@ export function Stats({ stats, loading }) {
       <div class="stats__heading">
         <h2>Results</h2>
         <p>
-          <small>As of: {new Date().toLocaleDateString()}</small>
+          {currentTimestamp ? (
+            <small>
+              As of {new Date(currentTimestamp).toLocaleTimeString()}
+            </small>
+          ) : (
+            "-"
+          )}
         </p>
       </div>
       <section>

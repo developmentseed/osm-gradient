@@ -1,4 +1,17 @@
-export function PanelInputs() {
+import Preact from "preact";
+import ReactSlider from "react-slider";
+
+interface PanelInputsProps {
+  isLoading: boolean;
+  timestamps: string[];
+  dispatchAppState: Preact.Dispatch<any>;
+}
+
+export function PanelInputs(props: PanelInputsProps) {
+  const { isLoading, timestamps, dispatchAppState } = props;
+
+  const lastTimestampIndex = timestamps?.length > 0 ? timestamps.length - 1 : 0;
+
   return (
     <article>
       <section>
@@ -10,8 +23,32 @@ export function PanelInputs() {
       </section>
       <section>
         <h3>Time Period</h3>
-        <p><small>Select one hour from: </small></p>
+        <p>
+          <small>Select one hour from: </small>
+        </p>
         <input type="date" />
+      </section>
+      <section>
+        <ReactSlider
+          className="horizontal-slider"
+          marks
+          markClassName="example-mark"
+          min={0}
+          max={lastTimestampIndex}
+          value={lastTimestampIndex}
+          thumbClassName="example-thumb"
+          trackClassName="example-track"
+          renderThumb={(thumbProps) => <div {...thumbProps}>X</div>}
+          disabled={isLoading}
+          onChange={(value: number) => {
+            dispatchAppState({
+              type: "SET_CURRENT_TIMESTAMP",
+              data: {
+                currentTimestamp: timestamps[value],
+              },
+            });
+          }}
+        />
       </section>
     </article>
   );

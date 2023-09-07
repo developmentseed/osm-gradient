@@ -56,8 +56,11 @@ function calculateStats(features) {
     otherDeleted: 0,
     users: {},
   };
+
+  let timestamps = new Set();
   for (let feature of features.features) {
     const changeType = feature.properties.changeType;
+    timestamps.add(feature.properties.timestamp);
     if (
       changeType === "added" ||
       changeType === "modifiedNew" ||
@@ -100,5 +103,7 @@ function calculateStats(features) {
       stats.users[user] = (stats.users[user] || 0) + 1;
     }
   }
+
+  stats.timestamps = Array.from(timestamps).sort();
   return stats;
 }
