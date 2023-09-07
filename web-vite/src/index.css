@@ -243,6 +243,10 @@ li.bar-chart__bar {
   background-repeat: no-repeat;
   animation: skeleton-loading 2s linear infinite;
 }
+.bar-chart__bar .loading:not(:first-child):after{
+  width: 100%;
+  border-radius: 0;
+}
 .loading:first-child:after {
   left:0;
 }
