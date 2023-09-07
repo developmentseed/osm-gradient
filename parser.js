@@ -25,9 +25,9 @@ fs.readFile(fileName, "utf8", (err, data) => {
     Object.keys(result).forEach((changesetId) => {
       result[changesetId].forEach((element) => {
         const change = changesetParser.elementParser(element);
-        // console.log('change', change);
+
+        // do some validation here
         featureCollection.features = featureCollection.features.concat(change);
-        // console.log('change', change);
       });
     });
     console.log(JSON.stringify(featureCollection, null, 1));

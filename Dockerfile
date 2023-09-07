@@ -23,6 +23,9 @@ COPY parser.js ./
 # The main script to run the tasks
 COPY process.sh ./
 
+# Install geojson-merge
+RUN npm install -g geojson-merge
+
 # Give execute permissions to the script
 RUN chmod +x process.sh
 

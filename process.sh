@@ -35,7 +35,10 @@ for (( i=start_num; i>end_num; i-- )); do
 done
 echo 'Done parsing files'
 
-echo "Combining files"
-echo '{ "type": "FeatureCollection", "features":' > /tmp/final_geojson.json
-jq -s '.[0].features|flatten' /tmp/*.geojson >> /tmp/final_geojson.json
-echo '}' >> /tmp/final_geojson.json
+echo 'Combining files'
+geojson-merge /tmp/*.geojson > /tmp/final_geojson.json
+echo 'Done combining files'
+
+echo 'Replace nulls with 0'
+sed -i 's/null/0/g' /tmp/final_geojson.json
+echo 'Done replacing nulls with 0'
