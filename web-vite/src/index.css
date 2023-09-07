@@ -89,13 +89,32 @@ body {
   background: var(--bg-dark);
   color: var(--base-light);
   overflow: auto;
-  border-right: 1px solid rgba(255, 255, 255, 0.125);
-  box-shadow: 1rem 0px 1.5rem 0px rgba(68, 63, 63, 0.08),
+  border-right: 1px solid rgba(83, 64, 64, 0.125);
+  box-shadow: 1rem -1rem 1.5rem 0px rgba(68, 63, 63, 0.08),
     0px 0px 1rem 0px rgba(4, 240, 255, 0.12),
     0px 0px 12rem 0px rgba(0, 0, 0, 0.8) inset;
   border-radius: 0.5rem;
   position: relative;
   top: -1rem;
+  height: calc(100% + 1rem);
+}
+.panel.open {
+  top: 12vh;
+  position: absolute;
+  height: calc(100vh - 5rem);
+}
+.panel__dragger {
+  display: inline-block;
+  align-self: center;
+  justify-self: center;
+  position: relative;
+  width: 3rem;
+  height: 0.375rem;
+  border-radius: 1rem;
+  background: rgba(222,222,222,.25);
+  margin-top: -1rem;
+  color: transparent;
+  margin-bottom: 1rem;
 }
 .panel h2,
 .panel h3 {
@@ -195,5 +214,9 @@ input {
   .panel {
     border-radius: 0;
     top: initial;
+    height: initial;
+  }
+  .panel__dragger {
+    display: none;
   }
 }
