@@ -1,3 +1,6 @@
-Minutely metrics for OpenStreetMap using FlatGeoBuff
+# OSM Tardis
 
-node parser.js test/5652386.osc > 5652386.geojson
+Visualize statistics and browse OSM diffs over a map.
+
+- [Front-end app](web-vite/README.md)
+- Pipeline
