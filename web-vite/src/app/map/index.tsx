@@ -68,34 +68,61 @@ export function Map(props: MapProps) {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
       });
+
+      map.addLayer({
+        id: "data-fill",
+        type: "line",
+        source: "data",
+        filter: [
+          "any",
+          ["==", "$type", "Polygon"],
+          ["==", "$type", "LineString"],
+        ],
+        paint: {
+          "line-opacity": 0.8,
+          "line-width": 2,
+          "line-color": [
+            "match",
+            ["get", "changeType"],
+            // Added features color
+            "added",
+            "#00FF00",
+            // Modified features color
+            "modifiedNew",
+            "blue",
+            // Removed features color
+            "deletedNew",
+            "#FF0000",
+            // Default color for other features
+            "#000",
+          ],
+        },
+      });
+
       map.addLayer({
         id: "data-point",
         type: "circle",
         source: "data",
-        paint: {
-          "circle-radius": 6,
-          "circle-color": "#B42222",
-        },
         filter: ["==", "$type", "Point"],
-      });
-      map.addLayer({
-        id: "data-fill",
-        type: "fill",
-        source: "data",
-        filter: ["==", "$type", "Polygon"],
         paint: {
-          "fill-color": "#FEB24C",
-        },
-      });
-      map.addLayer({
-        id: "data-line",
-        type: "line",
-        source: "data",
-        filter: ["==", "$type", "LineString"],
-        paint: {
-          "line-color": "#800026",
-          "line-opacity": 0.8,
-          "line-width": 2,
+          "circle-stroke-color": [
+            "match",
+            ["get", "changeType"],
+            // Added features color
+            "added",
+            "#00FF00",
+            // Modified features color
+            "modifiedNew",
+            "blue",
+            // Removed features color
+            "deletedNew",
+            "#FF0000",
+            // Default color for other features
+            "#000",
+          ],
+          "circle-stroke-width": 2,
+          "circle-radius": 6,
+          "circle-opacity": 0,
         },
       });
 
