@@ -121,7 +121,7 @@ export function Map(props: MapProps) {
             "#000",
           ],
           "circle-stroke-width": 2,
-          "circle-radius": 6,
+          "circle-radius": 2,
           "circle-opacity": 0,
         },
       });
