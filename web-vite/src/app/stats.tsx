@@ -1,4 +1,57 @@
-export function Stats({ stats }) {
+export function Stats({ stats, loading }) {
+  if (loading || !stats){
+    return (
+      <article class="stats">
+        <div class="stats__heading">
+          <h2>Results</h2>
+          <p class="loading" />
+        </div>
+        <section >
+          <h3>Feature Stats</h3>
+          <table class="loading__wrapper">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Added</th>
+                <th>Modified</th>
+                <th>Deleted</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from(Array(3).keys()).map((x) => {
+                return (<tr key={x}>
+                  <td class="loading" />
+                  <td class="loading" />
+                  <td class="loading" />
+                  <td class="loading" />
+                </tr>)
+              })}
+            </tbody>
+          </table>
+        </section>
+        <section >
+          <h3>Tag Stats</h3>
+          <table class="loading__wrapper">
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from(Array(12).keys()).map((x) => {
+                return (<tr key={x}>
+                  <td class="loading" />
+                  <td class="loading" />
+                </tr>)
+              })}
+            </tbody>
+          </table>
+        </section>
+
+      </article>
+    )
+  }
   let sortedUsers = [];
   let sortedTags = [];
   Object.keys(stats.users).forEach((user) => {

@@ -138,8 +138,44 @@ input {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
 }
 .stats__heading h2 {
   font-size: 1.125rem;
+  width: 100%;
+}
+.stats__heading p {
+  justify-self: flex-end;
+  white-space: pre;
+} 
+
+.loading {
+  height: 20px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.loading:after {
+  content: '';
+  position: absolute;
+  width: 80%;
+  top: 4px;
+  right: 0;
+  height: 12px;
+  border-radius: 0.25rem;
+  background: linear-gradient( 90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.0125) 80% ), rgba(122,122,122,0.125);
+  background-size: 80px 24px, 100%;
+  background-position: -100px 0, 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-loading 2s linear infinite;
+}
+.loading:first-child:after {
+  left:0;
+}
+@keyframes skeleton-loading {
+  to {
+      background-position:
+          100px 0;
+  }
 }
