@@ -15,6 +15,12 @@ const MAP_OPTIONS = {
   zoom: number;
 };
 
+const MAP_COLORS = {
+  modified: '#619EFF',
+  added: '#8CF8A3',
+  deleted: '#FF7A7A',
+}
+
 export function Map(props: MapProps) {
   const { appState, dispatchAppState } = props;
 
@@ -81,13 +87,13 @@ export function Map(props: MapProps) {
             ["get", "changeType"],
             // Added features color
             "added",
-            "#00FF00",
+            MAP_COLORS.added,
             // Modified features color
             "modifiedNew",
-            "blue",
+            MAP_COLORS.modified,
             // Removed features color
             "deletedNew",
-            "#FF0000",
+            MAP_COLORS.deleted,
             // Default color for other features
             "#000",
           ],
@@ -111,13 +117,13 @@ export function Map(props: MapProps) {
             ["get", "changeType"],
             // Added features color
             "added",
-            "#00FF00",
+            MAP_COLORS.added,
             // Modified features color
             "modifiedNew",
-            "blue",
+            MAP_COLORS.modified,
             // Removed features color
             "deletedNew",
-            "#FF0000",
+            MAP_COLORS.deleted,
             // Default color for other features
             "#000",
           ],
@@ -135,13 +141,13 @@ export function Map(props: MapProps) {
             ["get", "changeType"],
             // Added features color
             "added",
-            "#00FF00",
+            MAP_COLORS.added,
             // Modified features color
             "modifiedNew",
-            "blue",
+            MAP_COLORS.modified,
             // Removed features color
             "deletedNew",
-            "#FF0000",
+            MAP_COLORS.deleted,
             // Default color for other features
             "#000",
           ],
