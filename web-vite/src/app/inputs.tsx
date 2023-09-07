@@ -34,8 +34,8 @@ export function PanelInputs(props: PanelInputsProps) {
           marks
           markClassName="example-mark"
           min={0}
-          max={lastTimestampIndex}
-          value={lastTimestampIndex}
+          max={lastTimestampIndex || 5}
+          defaultValue={lastTimestampIndex || 5}
           thumbClassName="example-thumb"
           trackClassName="example-track"
           renderThumb={(thumbProps) => <div {...thumbProps}>X</div>}

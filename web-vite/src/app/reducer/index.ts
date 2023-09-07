@@ -11,6 +11,8 @@ export enum MapStatus {
 export interface AppState {
   map: any;
   mapStatus: MapStatus;
+  geojson?: any;
+  currentTimestampGeojson?: any;
 }
 
 export enum AppActionTypes {
@@ -51,6 +53,10 @@ export type AppAction =
 export const appInitialState = {
   map: undefined,
   mapStatus: MapStatus.IDLE,
+  geojson: {
+    type: "FeatureCollection",
+    features: [],
+  },
 };
 
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
@@ -71,10 +77,11 @@ function appReducer(state: AppState, action: AppAction) {
         mapStatus: MapStatus.LOADING,
       };
     case AppActionTypes.UPDATE_VIEW_SUCCESS: {
-      const { stats } = action.data;
+      const { stats, geojson } = action.data;
       return {
         ...state,
-        stats: action.data.stats,
+        stats,
+        geojson,
         currentTimestamp: stats.timestamps[stats.timestamps.length - 1],
         mapStatus: MapStatus.READY,
       };
@@ -84,6 +91,12 @@ function appReducer(state: AppState, action: AppAction) {
       return {
         ...state,
         currentTimestamp,
+        currentTimestampGeojson: {
+          type: "FeatureCollection",
+          features: (state.geojson || []).features.filter(
+            (f: any) => f.properties.timestamp === currentTimestamp
+          ),
+        },
         mapStatus: MapStatus.READY,
       };
     }
@@ -114,7 +127,7 @@ const asyncActionHandlers: any = {
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_SUCCESS,
-          data: { stats },
+          data: { stats, geojson },
         });
       } catch (error) {
         console.log(error);
