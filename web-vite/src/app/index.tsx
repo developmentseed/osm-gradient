@@ -16,7 +16,7 @@ export function App() {
       <Header />
       <Panel>
         <PanelInputs />
-        <Stats stats={appState.stats} loading={mapStatus === MapStatus.LOADING} />
+        <Stats stats={stats} loading={mapStatus === MapStatus.LOADING} />
       </Panel>
       <Map appState={appState} dispatchAppState={dispatchAppState} />
       {mapStatus === MapStatus.LOADING && (
