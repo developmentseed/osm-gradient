@@ -71,6 +71,31 @@ export function Map(props: MapProps) {
 
       map.addLayer({
         id: "data-fill",
+        type: "fill",
+        source: "data",
+        filter: ["any", ["==", "$type", "Polygon"]],
+        paint: {
+          "fill-opacity": 0.1,
+          "fill-color": [
+            "match",
+            ["get", "changeType"],
+            // Added features color
+            "added",
+            "#00FF00",
+            // Modified features color
+            "modifiedNew",
+            "blue",
+            // Removed features color
+            "deletedNew",
+            "#FF0000",
+            // Default color for other features
+            "#000",
+          ],
+        },
+      });
+
+      map.addLayer({
+        id: "data-line",
         type: "line",
         source: "data",
         filter: [
@@ -125,6 +150,26 @@ export function Map(props: MapProps) {
           "circle-opacity": 0,
         },
       });
+
+      function onClick(e) {
+        const props = e.features[0].properties;
+        let tags = "";
+        let tagObject = JSON.parse(props.tags);
+        for (const [key, value] of Object.entries(tagObject)) {
+          tags = tags + "<dt>" + key + "=" + value + "</dt>";
+        }
+        const html = `<dl><dt><b>action:</b> ${props.action}</dt>
+        <dt><b>id:</b> ${props.id}</dt>
+        <dt><b>user:</b> ${props.user}<dt>
+        <br />
+        ${tags}
+        </dl>`;
+        new MapLibreGL.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+      }
+
+      map.on("click", "data-point", onClick);
+      map.on("click", "data-fill", onClick);
+      map.on("click", "data-line", onClick);
 
       map.addSource("rectangle", {
         type: "geojson",
