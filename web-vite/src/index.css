@@ -46,6 +46,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
+  background: var(--bg-dark);
 }
 .layout {
   display: grid;
@@ -88,10 +89,10 @@ body {
   background: var(--bg-dark);
   color: var(--base-light);
   overflow: auto;
-  border-right: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 12px 0px 24px 0px rgba(68, 63, 63, 0.08),
-    1px 0px 16px 0px rgba(4, 240, 255, 0.12),
-    0px 0px 180px 0px rgba(0, 0, 0, 0.8) inset;
+  border-right: 1px solid rgba(255, 255, 255, 0.125);
+  box-shadow: 1rem 0px 1.5rem 0px rgba(68, 63, 63, 0.08),
+    0px 0px 1rem 0px rgba(4, 240, 255, 0.12),
+    0px 0px 12rem 0px rgba(0, 0, 0, 0.8) inset;
   border-radius: 0.5rem;
   position: relative;
   top: -1rem;
