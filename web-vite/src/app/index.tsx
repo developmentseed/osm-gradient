@@ -1,20 +1,18 @@
-import { Header } from './components/header';
-import { Layout } from './components/layout';
-import { PanelInputs } from './inputs';
-import { Map } from './map';
-import { Panel } from './panel';
-import { MapStatus, useAppReducer } from './reducer';
-import { Stats } from './stats';
-import { CartoSlider } from './cartoslider';
+import { Header } from "./components/header";
+import { Layout } from "./components/layout";
+import { PanelInputs } from "./inputs";
+import { Map } from "./map";
+import { Panel } from "./panel";
+import { MapStatus, useAppReducer } from "./reducer";
+import { Stats } from "./stats";
+import { CartoSlider } from "./cartoslider";
 
 export function App() {
   const [appState, dispatchAppState] = useAppReducer();
 
-  const { mapStatus, timestamps } = appState;
+  const { mapStatus, timestamps, currentTimestamp } = appState;
 
   const isLoading = mapStatus === MapStatus.LOADING;
-
-  const lastTimestampIndex = timestamps?.length > 0 ? timestamps.length - 1 : 0;
 
   return (
     <Layout>
@@ -30,7 +28,7 @@ export function App() {
       <main class="carto">
         <Map appState={appState} dispatchAppState={dispatchAppState} />
         <CartoSlider
-          lastTimestampIndex={lastTimestampIndex}
+          currentTimestamp={currentTimestamp}
           isLoading={isLoading}
           timestamps={timestamps}
           dispatchAppState={dispatchAppState}
@@ -38,7 +36,7 @@ export function App() {
         />
       </main>
       {mapStatus === MapStatus.LOADING && (
-        <div style={{ position: 'absolute' }}>Loading...</div>
+        <div style={{ position: "absolute" }}>Loading...</div>
       )}
     </Layout>
   );
