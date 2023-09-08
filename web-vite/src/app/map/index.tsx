@@ -1,6 +1,8 @@
 import { useEffect } from "preact/hooks";
-import MapLibreGL from "maplibre-gl";
 import { AppActionTypes, AppState } from "../reducer";
+import MapLibreGL from "maplibre-gl";
+import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
 interface MapProps {
   appState: AppState;
@@ -70,6 +72,17 @@ export function Map(props: MapProps) {
     });
 
     map.on("load", () => {
+      var GeoAPI = {
+        forwardGeocode: (config) => {
+          return { features: [] };
+        },
+        reverseGeocode: (config) => {
+          return { features: [] };
+        },
+      };
+      var geocoder = new MaplibreGeocoder(GeoAPI, {});
+      geocoder.addTo("#map");
+
       map.addSource("data", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
