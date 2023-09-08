@@ -29,26 +29,28 @@ export function PanelInputs(props: PanelInputsProps) {
         <input type="date" />
       </section>
       <section>
-        <ReactSlider
-          className="horizontal-slider"
-          marks
-          markClassName="example-mark"
-          min={0}
-          max={lastTimestampIndex || 5}
-          defaultValue={lastTimestampIndex || 5}
-          thumbClassName="example-thumb"
-          trackClassName="example-track"
-          renderThumb={(thumbProps) => <div {...thumbProps}>X</div>}
-          disabled={isLoading}
-          onChange={(value: number) => {
-            dispatchAppState({
-              type: "SET_CURRENT_TIMESTAMP",
-              data: {
-                currentTimestamp: timestamps[value],
-              },
-            });
-          }}
-        />
+        {!isLoading && timestamps?.length > 0 && (
+          <ReactSlider
+            className="horizontal-slider"
+            marks
+            markClassName="example-mark"
+            min={0}
+            max={lastTimestampIndex}
+            defaultValue={lastTimestampIndex}
+            thumbClassName="example-thumb"
+            trackClassName="example-track"
+            renderThumb={(thumbProps: any) => <div {...thumbProps}>X</div>}
+            disabled={isLoading}
+            onChange={(value: number) => {
+              dispatchAppState({
+                type: "SET_CURRENT_TIMESTAMP",
+                data: {
+                  currentTimestamp: timestamps[value],
+                },
+              });
+            }}
+          />
+        )}
       </section>
     </article>
   );

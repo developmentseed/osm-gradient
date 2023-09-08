@@ -47,6 +47,7 @@ export type AppAction =
       type: AppActionTypes.UPDATE_VIEW_SUCCESS;
       data: {
         stats: any;
+        geojson: any;
       };
     };
 
@@ -62,8 +63,6 @@ export const appInitialState = {
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
 
 function appReducer(state: AppState, action: AppAction) {
-  // const nextState = { ...state };
-
   switch (action.type) {
     case AppActionTypes.SET_MAP_REF:
       return {
