@@ -10,6 +10,8 @@
     "deploy": "vite build && surge dist https://osm-tardis.surge.sh"
   },
   "dependencies": {
+    "@turf/area": "^6.5.0",
+    "@turf/bbox-polygon": "^6.5.0",
     "flatgeobuf": "^3.26.2",
     "lodash.get": "^4.4.2",
     "maplibre-gl": "^3.3.1",

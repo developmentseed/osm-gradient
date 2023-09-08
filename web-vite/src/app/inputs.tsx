@@ -1,4 +1,9 @@
-export function PanelInputs() {
+interface PanelInputsProps {
+  area: any;
+}
+
+export function PanelInputs(props: PanelInputsProps) {
+  const { area } = props;
 
   return (
     <article>
@@ -6,7 +11,7 @@ export function PanelInputs() {
         <h3>Area of Interest (AOI)</h3>
         <small>Zoom and pan the map to set the AOI for stats </small>
         <p>
-          Currently selected: <strong>{2333}m&sup2;</strong>
+          Currently selected: <strong>{area} km&sup2;</strong>
         </p>
       </section>
       <section>

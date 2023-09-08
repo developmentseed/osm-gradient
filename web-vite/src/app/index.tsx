@@ -10,7 +10,7 @@ import { CartoSlider } from "./cartoslider";
 export function App() {
   const [appState, dispatchAppState] = useAppReducer();
 
-  const { mapStatus, timestamps, currentTimestamp } = appState;
+  const { mapStatus, timestamps, currentTimestamp, formattedArea } = appState;
 
   const isLoading = mapStatus === MapStatus.LOADING;
 
@@ -18,7 +18,7 @@ export function App() {
     <Layout>
       <Header />
       <Panel>
-        <PanelInputs />
+        <PanelInputs area={formattedArea} />
         <Stats
           stats={appState.stats}
           currentTimestamp={appState.currentTimestamp}
