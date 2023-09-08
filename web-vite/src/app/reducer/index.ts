@@ -62,6 +62,15 @@ export const appInitialState = {
 
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
 
+function applyTimestampFilter(geojson: any, timestamp: string) {
+  return {
+    type: "FeatureCollection",
+    features: geojson.features.filter(
+      (f: any) => f.properties.timestamp === timestamp
+    ),
+  };
+}
+
 function appReducer(state: AppState, action: AppAction) {
   switch (action.type) {
     case AppActionTypes.SET_MAP_REF:
@@ -77,11 +86,16 @@ function appReducer(state: AppState, action: AppAction) {
       };
     case AppActionTypes.UPDATE_VIEW_SUCCESS: {
       const { stats, geojson } = action.data;
+      const currentTimestamp = stats.timestamps[stats.timestamps.length - 1];
       return {
         ...state,
         stats,
         geojson,
-        currentTimestamp: stats.timestamps[stats.timestamps.length - 1],
+        currentTimestamp,
+        currentTimestampGeojson: applyTimestampFilter(
+          geojson,
+          currentTimestamp
+        ),
         mapStatus: MapStatus.READY,
       };
     }
@@ -90,12 +104,10 @@ function appReducer(state: AppState, action: AppAction) {
       return {
         ...state,
         currentTimestamp,
-        currentTimestampGeojson: {
-          type: "FeatureCollection",
-          features: (state.geojson || []).features.filter(
-            (f: any) => f.properties.timestamp === currentTimestamp
-          ),
-        },
+        currentTimestampGeojson: applyTimestampFilter(
+          state.geojson,
+          currentTimestamp
+        ),
         mapStatus: MapStatus.READY,
       };
     }

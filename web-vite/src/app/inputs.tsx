@@ -1,10 +1,9 @@
-import Preact from "preact";
 import ReactSlider from "react-slider";
 
 interface PanelInputsProps {
   isLoading: boolean;
   timestamps: string[];
-  dispatchAppState: Preact.Dispatch<any>;
+  dispatchAppState: any;
 }
 
 export function PanelInputs(props: PanelInputsProps) {
