@@ -21,10 +21,11 @@ fs.readFile(fileName, "utf8", (err, data) => {
       result[changesetId].forEach((element) => {
         const change = changesetParser.elementParser(element);
 
-        // do some validation here
-        console.log(JSON.stringify(change));
+        change.forEach((feature) => {
+          // do some validation here
+          console.log(JSON.stringify(feature));
+        });
       });
     });
-    console.log(JSON.stringify(featureCollection));
   });
 });

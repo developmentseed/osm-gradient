@@ -48,11 +48,12 @@ seq $start_num $end_num | parallel fetchOscFunction
 
 # Parse .osc files and collect into a single geojson using parser.js and jq
 echo 'Parsing files'
-for (( i=start_num; i<end_num; i++ )); do
-    echo $i
-    file_path="/tmp/${i}.osc"
-    node parser.js $file_path > "/tmp/${start_date}-${start_hour}-${i}.geojsonld"
-done
+parallel -j +0 "
+    echo {};
+    file_path=\"/tmp/{}.osc\";
+    node parser.js \$file_path > \"/tmp/${start_date}-${start_hour}-{}.geojsonld\"
+" ::: $(seq $start_num $((end_num-1)))
+
 echo 'Done parsing files'
 
 echo "Combining files"
