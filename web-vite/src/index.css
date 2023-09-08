@@ -87,12 +87,14 @@ body {
   display: flex;
   flex-flow: column nowrap;
   padding: 1rem;
+  padding-bottom: 2rem;
 }
 #map {
   min-height: 480px;
   max-height: 100%;
 }
 .maplibregl-popup-content {
+  color: var(--base);
   padding: 1.25rem;
   border-radius: 0.25rem;
   box-shadow: 0 0 1rem 0 rgba(50,50,50,.125);
@@ -302,7 +304,7 @@ li.bar-chart__bar {
   .carto__slider--wrapper {
     display: flex;
     flex-flow: column nowrap;
-    padding: 1rem;
+    padding-bottom: 1rem;
   }
   .carto #map {
     flex: 8;

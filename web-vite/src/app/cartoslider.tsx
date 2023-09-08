@@ -19,7 +19,7 @@ export function CartoSlider(props: CartoSliderProps) {
   return (
     <section class="carto__slider--wrapper">
       <div class="carto__slider--heading">
-        <h4>Changeset Animation</h4>
+        <h4>Change Timeline</h4>
       </div>
       <div class="carto__slider">
         <div class="carto__slider--tools">
