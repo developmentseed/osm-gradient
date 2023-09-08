@@ -4,7 +4,6 @@
   "description": "Minutely metrics for OSM using FlatGeoBuff",
   "main": "index.js",
   "scripts": {
-    "start": "serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
