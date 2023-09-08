@@ -51,7 +51,7 @@ echo 'Parsing files'
 for (( i=start_num; i<end_num; i++ )); do
     echo $i
     file_path="/tmp/${i}.osc"
-    node parser.js $file_path > "/tmp/${start_date}-${start_hour}-${i}.geojson"
+    node parser.js $file_path > "/tmp/${start_date}-${start_hour}-${i}.geojsonld"
 done
 echo 'Done parsing files'
 
