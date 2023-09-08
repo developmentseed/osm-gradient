@@ -1,6 +1,6 @@
 import { useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
-import { getFgbData } from "../map/utils.ts";
+import { calculateStats, getFgbData } from "../map/utils.ts";
 
 export enum MapStatus {
   IDLE = "IDLE",
@@ -46,8 +46,8 @@ export type AppAction =
   | {
       type: AppActionTypes.UPDATE_VIEW_SUCCESS;
       data: {
-        stats: any;
         geojson: any;
+        timestamps: string[];
       };
     };
 
@@ -85,29 +85,35 @@ function appReducer(state: AppState, action: AppAction) {
         mapStatus: MapStatus.LOADING,
       };
     case AppActionTypes.UPDATE_VIEW_SUCCESS: {
-      const { stats, geojson } = action.data;
-      const currentTimestamp = stats.timestamps[stats.timestamps.length - 1];
+      const { geojson, timestamps } = action.data;
+      const currentTimestamp = timestamps[timestamps.length - 1];
+      const currentTimestampGeojson = applyTimestampFilter(
+        geojson,
+        currentTimestamp
+      );
+      const stats = calculateStats(currentTimestampGeojson);
       return {
         ...state,
         stats,
         geojson,
+        timestamps,
         currentTimestamp,
-        currentTimestampGeojson: applyTimestampFilter(
-          geojson,
-          currentTimestamp
-        ),
+        currentTimestampGeojson,
         mapStatus: MapStatus.READY,
       };
     }
     case AppActionTypes.SET_CURRENT_TIMESTAMP: {
       const { currentTimestamp } = action.data;
+      const currentTimestampGeojson = applyTimestampFilter(
+        state.geojson,
+        currentTimestamp
+      );
+      const stats = calculateStats(currentTimestampGeojson);
       return {
         ...state,
+        stats,
         currentTimestamp,
-        currentTimestampGeojson: applyTimestampFilter(
-          state.geojson,
-          currentTimestamp
-        ),
+        currentTimestampGeojson,
         mapStatus: MapStatus.READY,
       };
     }
@@ -132,13 +138,13 @@ const asyncActionHandlers: any = {
           type: AppActionTypes.UPDATE_VIEW_START,
         });
 
-        const { geojson, stats } = await getFgbData(map);
+        const { geojson, timestamps } = await getFgbData(map);
 
         map.getSource("data").setData(geojson);
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_SUCCESS,
-          data: { stats, geojson },
+          data: { geojson, timestamps },
         });
       } catch (error) {
         console.log(error);

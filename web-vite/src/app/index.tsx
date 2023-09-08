@@ -5,15 +5,13 @@ import { Map } from "./map";
 import { Panel } from "./panel";
 import { MapStatus, useAppReducer } from "./reducer";
 import { Stats } from "./stats";
-import get from "lodash.get";
 
 export function App() {
   const [appState, dispatchAppState] = useAppReducer();
 
-  const { mapStatus, stats } = appState;
+  const { mapStatus, timestamps } = appState;
 
   const isLoading = mapStatus === MapStatus.LOADING;
-  const timestamps = get(stats, "timestamps", []);
 
   return (
     <Layout>
