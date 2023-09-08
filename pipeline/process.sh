@@ -56,8 +56,8 @@ done
 echo 'Done parsing files'
 
 echo "Combining files"
-output_file="/tmp/${start_date}T${start_hour}:00.geojson"
-geojson-merge "/tmp/${start_date}-${start_hour}-*.geojson" > $output_file
+output_file="/tmp/${start_date}T${start_hour}:00.geojsonld"
+cat "/tmp/${start_date}-${start_hour}-*.geojson" > $output_file
 echo "Done combining files"
 
 echo 'Replace nulls with 0'

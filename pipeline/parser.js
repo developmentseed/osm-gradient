@@ -30,7 +30,7 @@ fs.readFile(fileName, "utf8", (err, data) => {
         featureCollection.features = featureCollection.features.concat(change);
       });
     });
-    console.log(JSON.stringify(featureCollection, null, 1));
+    console.log(JSON.stringify(featureCollection));
     // changeset = changesetParser(result);
     // console.log('changeset', changeset);
     // return result;
