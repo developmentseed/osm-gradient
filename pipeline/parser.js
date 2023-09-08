@@ -17,22 +17,14 @@ fs.readFile(fileName, "utf8", (err, data) => {
       return;
     }
     ranOnce = true;
-    // console.log('keys', Object.keys(result));
-    const featureCollection = {
-      type: "FeatureCollection",
-      features: [],
-    };
     Object.keys(result).forEach((changesetId) => {
       result[changesetId].forEach((element) => {
         const change = changesetParser.elementParser(element);
 
         // do some validation here
-        featureCollection.features = featureCollection.features.concat(change);
+        console.log(JSON.stringify(change));
       });
     });
     console.log(JSON.stringify(featureCollection));
-    // changeset = changesetParser(result);
-    // console.log('changeset', changeset);
-    // return result;
   });
 });
