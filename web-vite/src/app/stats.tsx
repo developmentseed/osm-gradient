@@ -1,3 +1,5 @@
+import { useState } from "preact/hooks";
+
 interface StatsProps {
   stats: any;
   loading: boolean;
@@ -6,6 +8,9 @@ interface StatsProps {
 
 export function Stats(props: StatsProps) {
   const { stats, loading, currentTimestamp } = props;
+  const [expandedUsers, setExpandedUsers] = useState(false);
+  const [expandedTags, setExpandedTags] = useState(false);
+
   if (loading || !stats) {
     return (
       <article class="stats">
@@ -50,6 +55,27 @@ export function Stats(props: StatsProps) {
                   <tr key={x}>
                     <td class="loading" />
                     <td class="loading" />
+                    <td class="loading" />
+                    <td class="loading" />
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h3>User Stats</h3>
+          <table class="loading__wrapper">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Features</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from(Array(5).keys()).map((x) => {
+                return (
+                  <tr key={x}>
                     <td class="loading" />
                     <td class="loading" />
                   </tr>
@@ -215,25 +241,6 @@ export function Stats(props: StatsProps) {
         </table>
       </section>
       <section>
-        <h3>Tag Stats</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Tag</th>
-              <th>Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedTags.map((k) => (
-              <tr>
-                <td>{k[0]}</td>
-                <td>{k[1]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-      <section>
         <h3>User Stats</h3>
         <table>
           <thead>
@@ -243,12 +250,59 @@ export function Stats(props: StatsProps) {
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map((k) => (
+            {sortedUsers.slice(0, 5).map((k) => (
               <tr>
                 <td>{k[0]}</td>
                 <td>{k[1]}</td>
               </tr>
             ))}
+            {expandedUsers &&
+              sortedUsers.slice(5).map((k) => (
+                <tr>
+                  <td>{k[0]}</td>
+                  <td>{k[1]}</td>
+                </tr>
+              ))}
+            {sortedUsers.length > 5 && (
+              <tr onClick={() => setExpandedUsers(!expandedUsers)}>
+                <td class="tr--button" colSpan={2}>
+                  {!expandedUsers ? "See more +" : "See less -"}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h3>Tag Stats</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Tag</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedTags.slice(0, 5).map((k) => (
+              <tr>
+                <td>{k[0]}</td>
+                <td>{k[1]}</td>
+              </tr>
+            ))}
+            {expandedTags &&
+              sortedTags.slice(5).map((k) => (
+                <tr>
+                  <td>{k[0]}</td>
+                  <td>{k[1]}</td>
+                </tr>
+              ))}
+            {sortedTags.length > 5 && (
+              <tr onClick={() => setExpandedTags(!expandedTags)}>
+                <td class="tr--button" colSpan={2}>
+                  {!expandedTags ? "See more +" : "See less -"}
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </section>

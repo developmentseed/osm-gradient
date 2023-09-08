@@ -284,6 +284,15 @@ li.bar-chart__bar {
 .loading:first-child:after {
   left:0;
 }
+.tr--button {
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+.tr--button:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
 @keyframes skeleton-loading {
   to {
       background-position:
