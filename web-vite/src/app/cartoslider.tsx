@@ -10,27 +10,23 @@ interface CartoSliderProps {
 
 export function CartoSlider(props: CartoSliderProps) {
   const { isLoading, timestamps, dispatchAppState, currentTimestamp } = props;
-  const lastTimestampIndex = timestamps?.length > 0 ? timestamps.length - 1 : 0;
-
-  const sliderOptions = isLoading
-    ? {
-        max: 1,
-        defaultValue: 1,
-      }
-    : {
-        max: lastTimestampIndex,
-        defaultValue: lastTimestampIndex,
-      };
+  const lastTimestampIndex =
+    !isLoading && timestamps?.length > 0 ? timestamps.length - 1 : 10;
+  const currentTimestampIndex = !isLoading
+    ? timestamps?.indexOf(currentTimestamp)
+    : 10;
 
   return (
     <section class="carto__slider--wrapper">
       <div class="carto__slider--heading">
-        <h4>Changeset Animation</h4>
+        <h4>Change Timeline</h4>
       </div>
       <div class="carto__slider">
         <div class="carto__slider--tools">
           <p>
-            {currentTimestamp && new Date(currentTimestamp).toLocaleString()}
+            {!isLoading && currentTimestamp
+              ? new Date(currentTimestamp).toLocaleString()
+              : "Loading..."}
           </p>
         </div>
         <ReactSlider
@@ -38,7 +34,9 @@ export function CartoSlider(props: CartoSliderProps) {
           className="carto--slider"
           markClassName="slider--mark"
           min={0}
-          {...sliderOptions}
+          max={lastTimestampIndex}
+          defaultValue={lastTimestampIndex}
+          value={currentTimestampIndex}
           thumbClassName="slider--thumb"
           trackClassName="slider--track"
           onChange={(value: number) => {
