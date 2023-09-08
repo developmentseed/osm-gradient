@@ -1,6 +1,6 @@
 import { useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
-import { getFgbData } from "../map/utils.ts";
+import { calculateStats, getFgbData } from "../map/utils.ts";
 
 export enum MapStatus {
   IDLE = "IDLE",
@@ -11,10 +11,13 @@ export enum MapStatus {
 export interface AppState {
   map: any;
   mapStatus: MapStatus;
+  geojson?: any;
+  currentTimestampGeojson?: any;
 }
 
 export enum AppActionTypes {
   SET_MAP_REF = "SET_MAP_REF",
+  SET_CURRENT_TIMESTAMP = "SET_CURRENT_TIMESTAMP",
   UPDATE_VIEW = "UPDATE_VIEW",
   UPDATE_VIEW_START = "UPDATE_VIEW_START",
   UPDATE_VIEW_SUCCESS = "UPDATE_VIEW_SUCCESS",
@@ -29,6 +32,12 @@ export type AppAction =
       };
     }
   | {
+      type: AppActionTypes.SET_CURRENT_TIMESTAMP;
+      data: {
+        currentTimestamp: string;
+      };
+    }
+  | {
       type: AppActionTypes.UPDATE_VIEW;
     }
   | {
@@ -37,39 +46,79 @@ export type AppAction =
   | {
       type: AppActionTypes.UPDATE_VIEW_SUCCESS;
       data: {
-        stats: any;
+        geojson: any;
+        timestamps: string[];
       };
     };
 
 export const appInitialState = {
   map: undefined,
   mapStatus: MapStatus.IDLE,
+  geojson: {
+    type: "FeatureCollection",
+    features: [],
+  },
 };
 
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
 
+function applyTimestampFilter(geojson: any, timestamp: string) {
+  return {
+    type: "FeatureCollection",
+    features: geojson.features.filter(
+      (f: any) => f.properties.timestamp === timestamp
+    ),
+  };
+}
+
 function appReducer(state: AppState, action: AppAction) {
-  const nextState = { ...state };
   switch (action.type) {
     case AppActionTypes.SET_MAP_REF:
       return {
-        ...nextState,
+        ...state,
         map: action.data.map,
         mapStatus: MapStatus.READY,
       };
     case AppActionTypes.UPDATE_VIEW_START:
       return {
-        ...nextState,
+        ...state,
         mapStatus: MapStatus.LOADING,
       };
-    case AppActionTypes.UPDATE_VIEW_SUCCESS:
+    case AppActionTypes.UPDATE_VIEW_SUCCESS: {
+      const { geojson, timestamps } = action.data;
+      const currentTimestamp = timestamps[timestamps.length - 1];
+      const currentTimestampGeojson = applyTimestampFilter(
+        geojson,
+        currentTimestamp
+      );
+      const stats = calculateStats(currentTimestampGeojson);
       return {
-        ...nextState,
-        stats: action.data.stats,
+        ...state,
+        stats,
+        geojson,
+        timestamps,
+        currentTimestamp,
+        currentTimestampGeojson,
         mapStatus: MapStatus.READY,
       };
+    }
+    case AppActionTypes.SET_CURRENT_TIMESTAMP: {
+      const { currentTimestamp } = action.data;
+      const currentTimestampGeojson = applyTimestampFilter(
+        state.geojson,
+        currentTimestamp
+      );
+      const stats = calculateStats(currentTimestampGeojson);
+      return {
+        ...state,
+        stats,
+        currentTimestamp,
+        currentTimestampGeojson,
+        mapStatus: MapStatus.READY,
+      };
+    }
     default:
-      return nextState;
+      return { ...state };
   }
 }
 
@@ -89,13 +138,13 @@ const asyncActionHandlers: any = {
           type: AppActionTypes.UPDATE_VIEW_START,
         });
 
-        const { geojson, stats } = await getFgbData(map);
+        const { geojson, timestamps } = await getFgbData(map);
 
         map.getSource("data").setData(geojson);
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_SUCCESS,
-          data: { stats },
+          data: { geojson, timestamps },
         });
       } catch (error) {
         console.log(error);

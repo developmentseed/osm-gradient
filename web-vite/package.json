@@ -11,13 +11,17 @@
   },
   "dependencies": {
     "flatgeobuf": "^3.26.2",
+    "lodash.get": "^4.4.2",
     "maplibre-gl": "^3.3.1",
     "ol": "7.5.2",
     "preact": "^10.16.0",
+    "react-slider": "^2.0.6",
     "use-reducer-async": "^2.1.1"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.22.15",
     "@preact/preset-vite": "^2.5.0",
+    "@types/lodash.get": "^4.4.7",
     "surge": "^0.23.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"

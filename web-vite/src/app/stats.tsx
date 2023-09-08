@@ -1,6 +1,13 @@
-import { useState } from 'preact/hooks';
+import { useState } from "preact/hooks";
 
-export function Stats({ stats, loading }) {
+interface StatsProps {
+  stats: any;
+  loading: boolean;
+  currentTimestamp?: string;
+}
+
+export function Stats(props: StatsProps) {
+  const { stats, loading, currentTimestamp } = props;
   const [expandedUsers, setExpandedUsers] = useState(false);
   const [expandedTags, setExpandedTags] = useState(false);
 
@@ -67,10 +74,12 @@ export function Stats({ stats, loading }) {
             </thead>
             <tbody>
               {Array.from(Array(5).keys()).map((x) => {
-                return (<tr key={x}>
-                  <td class="loading" />
-                  <td class="loading" />
-                </tr>)
+                return (
+                  <tr key={x}>
+                    <td class="loading" />
+                    <td class="loading" />
+                  </tr>
+                );
               })}
             </tbody>
           </table>
@@ -85,18 +94,19 @@ export function Stats({ stats, loading }) {
               </tr>
             </thead>
             <tbody>
-              {Array.from(Array(4).keys()).map((x) => {
-                return (<tr key={x}>
-                  <td class="loading" />
-                  <td class="loading" />
-                </tr>)
+              {Array.from(Array(12).keys()).map((x) => {
+                return (
+                  <tr key={x}>
+                    <td class="loading" />
+                    <td class="loading" />
+                  </tr>
+                );
               })}
             </tbody>
           </table>
         </section>
-
       </article>
-    )
+    );
   }
   let sortedUsers = [];
   let sortedTags = [];
@@ -119,7 +129,13 @@ export function Stats({ stats, loading }) {
       <div class="stats__heading">
         <h2>Results</h2>
         <p>
-          <small>As of: {new Date().toLocaleDateString()}</small>
+          {currentTimestamp ? (
+            <small>
+              As of {new Date(currentTimestamp).toLocaleTimeString()}
+            </small>
+          ) : (
+            "-"
+          )}
         </p>
       </div>
       <section>
@@ -128,25 +144,68 @@ export function Stats({ stats, loading }) {
           <li class="bar-chart__bar">
             <span class="bar-chart__bar--label">Buildings</span>
             <div class="bar-chart__bar--value">
-              <span class="bar-chart__bar--val1" style={`flex-basis: ${(stats.buildingsAdded / stats.buildings) * 100}%`}></span>
-              <span class="bar-chart__bar--val2" style={`flex-basis: ${(stats.buildingsModified / stats.buildings) * 100}%`}></span>
-              <span class="bar-chart__bar--val3" style={`flex-basis: ${(stats.buildingsDeleted / stats.buildings) * 100}%`}></span>
+              <span
+                class="bar-chart__bar--val1"
+                style={`flex-basis: ${
+                  (stats.buildingsAdded / stats.buildings) * 100
+                }%`}
+              ></span>
+              <span
+                class="bar-chart__bar--val2"
+                style={`flex-basis: ${
+                  (stats.buildingsModified / stats.buildings) * 100
+                }%`}
+              ></span>
+              <span
+                class="bar-chart__bar--val3"
+                style={`flex-basis: ${
+                  (stats.buildingsDeleted / stats.buildings) * 100
+                }%`}
+              ></span>
             </div>
           </li>
           <li class="bar-chart__bar">
             <span class="bar-chart__bar--label">Highways</span>
             <div class="bar-chart__bar--value">
-              <span class="bar-chart__bar--val1" style={`flex-basis: ${(stats.highwaysAdded / stats.highways) * 100}%`}></span>
-              <span class="bar-chart__bar--val2" style={`flex-basis: ${(stats.highwaysModified / stats.highways) * 100}%`}></span>
-              <span class="bar-chart__bar--val3" style={`flex-basis: ${(stats.highwaysDeleted / stats.highways) * 100}%`}></span>
+              <span
+                class="bar-chart__bar--val1"
+                style={`flex-basis: ${
+                  (stats.highwaysAdded / stats.highways) * 100
+                }%`}
+              ></span>
+              <span
+                class="bar-chart__bar--val2"
+                style={`flex-basis: ${
+                  (stats.highwaysModified / stats.highways) * 100
+                }%`}
+              ></span>
+              <span
+                class="bar-chart__bar--val3"
+                style={`flex-basis: ${
+                  (stats.highwaysDeleted / stats.highways) * 100
+                }%`}
+              ></span>
             </div>
           </li>
           <li class="bar-chart__bar">
             <span class="bar-chart__bar--label">Other</span>
             <div class="bar-chart__bar--value">
-              <span class="bar-chart__bar--val1" style={`flex-basis: ${(stats.otherAdded / stats.other) * 100}%`}></span>
-              <span class="bar-chart__bar--val2" style={`flex-basis: ${(stats.otherModified / stats.other) * 100}%`}></span>
-              <span class="bar-chart__bar--val3" style={`flex-basis: ${(stats.otherDeleted / stats.other) * 100}%`}></span>
+              <span
+                class="bar-chart__bar--val1"
+                style={`flex-basis: ${(stats.otherAdded / stats.other) * 100}%`}
+              ></span>
+              <span
+                class="bar-chart__bar--val2"
+                style={`flex-basis: ${
+                  (stats.otherModified / stats.other) * 100
+                }%`}
+              ></span>
+              <span
+                class="bar-chart__bar--val3"
+                style={`flex-basis: ${
+                  (stats.otherDeleted / stats.other) * 100
+                }%`}
+              ></span>
             </div>
           </li>
         </ul>
@@ -191,19 +250,26 @@ export function Stats({ stats, loading }) {
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.slice(0,5).map((k) => (
+            {sortedUsers.slice(0, 5).map((k) => (
               <tr>
                 <td>{k[0]}</td>
                 <td>{k[1]}</td>
               </tr>
             ))}
-            {expandedUsers && sortedUsers.slice(5).map((k) => (
-              <tr>
-                <td>{k[0]}</td>
-                <td>{k[1]}</td>
+            {expandedUsers &&
+              sortedUsers.slice(5).map((k) => (
+                <tr>
+                  <td>{k[0]}</td>
+                  <td>{k[1]}</td>
+                </tr>
+              ))}
+            {sortedUsers.length > 5 && (
+              <tr onClick={() => setExpandedUsers(!expandedUsers)}>
+                <td class="tr--button" colSpan={2}>
+                  {!expandedUsers ? "See more +" : "See less -"}
+                </td>
               </tr>
-            ))}
-            {sortedUsers.length > 5 && <tr onClick={() => setExpandedUsers(!expandedUsers)}><td class="tr--button" colSpan={2}>{!expandedUsers ? 'See more +' : 'See less -'}</td></tr>}
+            )}
           </tbody>
         </table>
       </section>
@@ -217,19 +283,26 @@ export function Stats({ stats, loading }) {
             </tr>
           </thead>
           <tbody>
-            {sortedTags.slice(0,5).map((k) => (
+            {sortedTags.slice(0, 5).map((k) => (
               <tr>
                 <td>{k[0]}</td>
                 <td>{k[1]}</td>
               </tr>
             ))}
-            {expandedTags && sortedTags.slice(5).map((k) => (
-              <tr>
-                <td>{k[0]}</td>
-                <td>{k[1]}</td>
+            {expandedTags &&
+              sortedTags.slice(5).map((k) => (
+                <tr>
+                  <td>{k[0]}</td>
+                  <td>{k[1]}</td>
+                </tr>
+              ))}
+            {sortedTags.length > 5 && (
+              <tr onClick={() => setExpandedTags(!expandedTags)}>
+                <td class="tr--button" colSpan={2}>
+                  {!expandedTags ? "See more +" : "See less -"}
+                </td>
               </tr>
-            ))}
-            {sortedTags.length > 5 && <tr onClick={() => setExpandedTags(!expandedTags)}><td class="tr--button" colSpan={2}>{!expandedTags ? 'See more +' : 'See less -'}</td></tr>}
+            )}
           </tbody>
         </table>
       </section>

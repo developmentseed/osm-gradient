@@ -1,4 +1,5 @@
 export function PanelInputs() {
+
   return (
     <article>
       <section>
@@ -10,7 +11,9 @@ export function PanelInputs() {
       </section>
       <section>
         <h3>Time Period</h3>
-        <p><small>Select one hour from: </small></p>
+        <p>
+          <small>Select one hour from: </small>
+        </p>
         <input type="date" />
       </section>
     </article>
