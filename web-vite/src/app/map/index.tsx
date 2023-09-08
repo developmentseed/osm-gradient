@@ -16,10 +16,10 @@ const MAP_OPTIONS = {
 };
 
 const MAP_COLORS = {
-  modified: '#619EFF',
-  added: '#8CF8A3',
-  deleted: '#FF7A7A',
-}
+  modified: "#619EFF",
+  added: "#8CF8A3",
+  deleted: "#FF7A7A",
+};
 
 export function Map(props: MapProps) {
   const { appState, dispatchAppState } = props;
@@ -204,6 +204,12 @@ export function Map(props: MapProps) {
       });
     });
   }, [appState?.map]);
+
+  useEffect(() => {
+    if (appState && appState.map && appState.currentTimestampGeojson) {
+      appState.map.getSource("data").setData(appState.currentTimestampGeojson);
+    }
+  }, [appState?.map, appState?.currentTimestampGeojson]);
 
   return <div id="map"></div>;
 }

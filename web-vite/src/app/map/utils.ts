@@ -24,6 +24,8 @@ export async function getFgbData(map: any) {
     fbgBbox(map)
   );
 
+  let timestamps = new Set();
+
   for await (let feature of iter) {
     if (
       feature.properties.type !== "relation" &&
@@ -33,19 +35,17 @@ export async function getFgbData(map: any) {
     ) {
       geojson.features = geojson.features.concat({ ...feature, id: i });
       i += 1;
+      timestamps.add(feature.properties.timestamp);
     }
   }
 
-  return {
-    geojson,
-    stats: calculateStats(geojson),
-  };
+  return { geojson, timestamps: Array.from(timestamps).sort() };
 }
 
-function calculateStats(features) {
+export function calculateStats(geojson: any) {
   const stats = {
     tags: {},
-    buildings :0,
+    buildings: 0,
     buildingsAdded: 0,
     buildingsModified: 0,
     buildingsDeleted: 0,
@@ -59,7 +59,8 @@ function calculateStats(features) {
     otherDeleted: 0,
     users: {},
   };
-  for (let feature of features.features) {
+
+  for (let feature of geojson.features) {
     const changeType = feature.properties.changeType;
     if (
       changeType === "added" ||
@@ -112,5 +113,6 @@ function calculateStats(features) {
       stats.users[user] = (stats.users[user] || 0) + 1;
     }
   }
+
   return stats;
 }

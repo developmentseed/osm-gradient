@@ -76,11 +76,21 @@ body {
   text-transform: uppercase;
   color: var(--base-light);
 }
-
+.carto {
+  grid-row: 2;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 1rem;
+  color: var(--base-light);
+}
+.carto__slider--wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1rem;
+}
 #map {
   min-height: 480px;
   max-height: 100%;
-  grid-row: 2;
 }
 .maplibregl-popup-content {
   padding: 1.25rem;
@@ -112,6 +122,7 @@ body {
   position: relative;
   top: -1rem;
   height: calc(100% + 1rem);
+  z-index: 100;
 }
 .panel.open {
   top: 12vh;
@@ -227,7 +238,24 @@ li.bar-chart__bar {
 .stats__heading p {
   justify-self: flex-end;
   white-space: pre;
-} 
+}
+
+.carto__slider {
+  height: 1rem;
+  flex: 1;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+.carto__slider--heading h4 {
+  text-transform: uppercase;
+}
+.carto__slider--tools {
+  padding-right: 1rem;
+}
+.carto__slider--tools p {
+  font-size: 0.875rem;
+}
 
 .loading {
   height: 20px;
@@ -267,8 +295,17 @@ li.bar-chart__bar {
     grid-template-columns: 24rem 1fr;
     grid-template-rows: 3.5rem minmax(10px, 1fr);
   }
-  #map {
+  .carto {
     grid-row: initial;
+    height: calc(100vh - 3.5rem);
+  }
+  .carto__slider--wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 1rem;
+  }
+  .carto #map {
+    flex: 8;
   }
   .panel {
     border-radius: 0;
@@ -278,4 +315,62 @@ li.bar-chart__bar {
   .panel__dragger {
     display: none;
   }
+}
+
+/* Timeline Slider */
+.carto--slider {
+  width: 100%;
+  max-width: 100%;
+  height: 1rem;
+  flex: 2;
+}
+
+.slider--thumb {
+  background-color: var(--bg-light);
+  cursor: pointer;
+  border-radius: 512px;
+  box-sizing: border-box;
+  box-shadow: 0 -1px 1px 0 rgba(68,63,63,0.08), 0 2px 6px 0 rgba(68,63,63,0.16);
+  border: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  outline: none;
+  top: -0.125rem;
+}
+
+.slider--thumb.hover,
+.slider--thumb:hover {
+  background-color: #f7f7f7;
+}
+.slider--thumb.active,
+.slider--thumb:active {
+  background-color: #f0efef;
+  box-shadow: inset 0 1px 2px 0 rgba(68,63,63,0.16);
+}
+
+.slider--track {
+  position: relative;
+  background: #d4d4d4;
+  border-radius: 1rem 0 0 1rem;
+  top: 0.25rem;
+  height: 0.5rem;
+}
+
+.slider--track.slider--track-1 {
+  background: var(--bg-light);
+  border-radius: 0 1rem 1rem 0;
+}
+
+.slider--track.slider--track-2 {
+  background: var(--bg-light);
+}
+
+.slider--mark {
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 2px solid var(--bg-light);
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 50%;
+  vertical-align: middle;
 }
