@@ -97,7 +97,6 @@ function appReducer(state: AppState, action: AppAction) {
 
       const bounds = state.map.getBounds().toArray();
       const [[minX, minY], [maxX, maxY]] = bounds;
-      console.log(bounds);
       const poly = tBboxPolygon([minX, minY, maxX, maxY]);
       const area = tArea(poly);
       const formattedArea = new Intl.NumberFormat().format(
