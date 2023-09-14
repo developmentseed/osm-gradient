@@ -68,9 +68,9 @@ export function Map(props: MapProps) {
       maxZoom: 18,
       minZoom: 0,
     });
-    let scale = new MapLibreGL.ScaleControl({
+    const scale = new MapLibreGL.ScaleControl({
       maxWidth: 160,
-      unit: 'metric'
+      unit: "metric",
     });
     map.addControl(scale);
 
@@ -162,10 +162,10 @@ export function Map(props: MapProps) {
         },
       });
 
-      function onClick(e) {
+      function onClick(e: any) {
         const props = e.features[0].properties;
         let tags = "";
-        let tagObject = JSON.parse(props.tags);
+        const tagObject = JSON.parse(props.tags);
         for (const [key, value] of Object.entries(tagObject)) {
           tags = tags + "<dt>" + key + "=" + value + "</dt>";
         }
@@ -216,5 +216,5 @@ export function Map(props: MapProps) {
     }
   }, [appState?.map, appState?.currentTimestampGeojson]);
 
-  return <div id="map"></div>;
+  return <div id="map" />;
 }
