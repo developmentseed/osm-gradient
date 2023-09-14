@@ -763,6 +763,13 @@
   dependencies:
     "@types/geojson" "*"
 
+"@types/turf@^3.5.32":
+  version "3.5.32"
+  resolved "https://registry.yarnpkg.com/@types/turf/-/turf-3.5.32.tgz#15b39ad94e9b5c00e9e0ad97e9987253b5302b69"
+  integrity sha512-2Rtv0EIG7Tx1CC2ASzCPw63ugCwrqJCFqNL/Gk9QYE5iIyd+0/S/TlPTgQ+qeQC8NCEn/TncUeZp+aM9cg68rg==
+  dependencies:
+    "@types/geojson" "*"
+
 "@typescript-eslint/eslint-plugin@^6.7.0":
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-6.7.0.tgz#ed2a38867190f8a688af85ad7c8a74670b8b3675"
