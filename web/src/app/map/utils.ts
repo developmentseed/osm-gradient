@@ -1,4 +1,4 @@
-import { IGeoJsonFeature, geojson as flatgeobuf } from "flatgeobuf";
+import { geojson as flatgeobuf } from "flatgeobuf";
 
 export function fbgBbox(map: any) {
   const { lng, lat } = map.getCenter();
@@ -22,7 +22,7 @@ export async function getFgbData(map: any) {
   const iter = flatgeobuf.deserialize(
     "https://storage.googleapis.com/osm-tardis/2013-02-03T15%3A00.fgb",
     fbgBbox(map),
-  ) as AsyncGenerator<IGeoJsonFeature>;
+  ) as AsyncGenerator<any>;
 
   const timestamps = new Set();
 
