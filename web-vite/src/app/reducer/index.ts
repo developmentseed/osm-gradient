@@ -4,17 +4,12 @@ import { calculateStats, getFgbData } from "../map/utils.ts";
 import tArea from "@turf/area";
 import tBboxPolygon from "@turf/bbox-polygon";
 
+// TODO move to types.ts
+/* eslint-disable no-unused-vars */
 export enum MapStatus {
   IDLE = "IDLE",
   LOADING = "LOADING",
   READY = "READY",
-}
-
-export interface AppState {
-  map: any;
-  mapStatus: MapStatus;
-  geojson?: any;
-  currentTimestampGeojson?: any;
 }
 
 export enum AppActionTypes {
@@ -24,6 +19,16 @@ export enum AppActionTypes {
   UPDATE_VIEW_START = "UPDATE_VIEW_START",
   UPDATE_VIEW_SUCCESS = "UPDATE_VIEW_SUCCESS",
   UPDATE_VIEW_ERROR = "UPDATE_VIEW_ERROR",
+}
+
+export type AppReducer<State, Action> = (state: State, action: Action) => State;
+/* eslint-enable no-unused-vars */
+
+export interface AppState {
+  map: any;
+  mapStatus: MapStatus;
+  geojson?: any;
+  currentTimestampGeojson?: any;
 }
 
 export type AppAction =
@@ -62,13 +67,11 @@ export const appInitialState = {
   },
 };
 
-export type AppReducer<State, Action> = (state: State, action: Action) => State;
-
 function applyTimestampFilter(geojson: any, timestamp: string) {
   return {
     type: "FeatureCollection",
     features: geojson.features.filter(
-      (f: any) => f.properties.timestamp === timestamp
+      (f: any) => f.properties.timestamp === timestamp,
     ),
   };
 }
@@ -91,7 +94,7 @@ function appReducer(state: AppState, action: AppAction) {
       const currentTimestamp = timestamps[timestamps.length - 1];
       const currentTimestampGeojson = applyTimestampFilter(
         geojson,
-        currentTimestamp
+        currentTimestamp,
       );
       const stats = calculateStats(currentTimestampGeojson);
 
@@ -99,9 +102,7 @@ function appReducer(state: AppState, action: AppAction) {
       const [[minX, minY], [maxX, maxY]] = bounds;
       const poly = tBboxPolygon([minX, minY, maxX, maxY]);
       const area = tArea(poly);
-      const formattedArea = new Intl.NumberFormat().format(
-        (area / 1e6).toFixed(2)
-      );
+      const formattedArea = new Intl.NumberFormat().format(area / 1e6);
 
       return {
         ...state,
@@ -118,7 +119,7 @@ function appReducer(state: AppState, action: AppAction) {
       const { currentTimestamp } = action.data;
       const currentTimestampGeojson = applyTimestampFilter(
         state.geojson,
-        currentTimestamp
+        currentTimestamp,
       );
       const stats = calculateStats(currentTimestampGeojson);
       return {
@@ -161,7 +162,7 @@ const asyncActionHandlers: any = {
       } catch (error) {
         console.log(error);
         alert(
-          "Unexpected error while loading the map, please see console log."
+          "Unexpected error while loading the map, please see console log.",
         );
       }
     },
@@ -171,6 +172,6 @@ export const useAppReducer = () => {
   return useReducerAsync(
     logReducer(appReducer),
     appInitialState,
-    asyncActionHandlers
+    asyncActionHandlers,
   );
 };
