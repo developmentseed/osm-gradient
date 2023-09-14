@@ -1,4 +1,4 @@
-import { geojson as flatgeobuf } from "flatgeobuf";
+import { IGeoJsonFeature, geojson as flatgeobuf } from "flatgeobuf";
 
 export function fbgBbox(map: any) {
   const { lng, lat } = map.getCenter();
@@ -17,25 +17,31 @@ export function fbgBbox(map: any) {
 
 export async function getFgbData(map: any) {
   let i = 0;
-  const geojson = { type: "FeatureCollection", features: [] };
+  const geojson = { type: "FeatureCollection", features: [] as any[] };
 
   const iter = flatgeobuf.deserialize(
     "https://storage.googleapis.com/osm-tardis/2013-02-03T15%3A00.fgb",
     fbgBbox(map),
-  );
+  ) as AsyncGenerator<IGeoJsonFeature>;
 
   const timestamps = new Set();
 
   for await (const feature of iter) {
+    const { properties } = feature;
+
+    if (!properties || properties === null || properties === undefined) {
+      continue;
+    }
+
     if (
-      feature.properties.type !== "relation" &&
-      (feature.properties.changeType === "added" ||
-        feature.properties.changeType === "modifiedNew" ||
-        feature.properties.changeType === "deletedNew")
+      properties.type !== "relation" &&
+      (properties.changeType === "added" ||
+        properties.changeType === "modifiedNew" ||
+        properties.changeType === "deletedNew")
     ) {
-      geojson.features = geojson.features.concat({ ...feature, id: i });
+      geojson.features.push({ ...feature, id: i });
       i += 1;
-      timestamps.add(feature.properties.timestamp);
+      timestamps.add(properties.timestamp);
     }
   }
 
