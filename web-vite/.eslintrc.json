@@ -1,8 +1,7 @@
 {
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
+    "eslint-config-preact",
     "plugin:import/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:@typescript-eslint/recommended",
@@ -26,6 +25,7 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "jest/no-deprecated-functions": "off"
   }
 }
