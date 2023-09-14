@@ -1,5 +1,5 @@
 interface PanelInputsProps {
-  area: any;
+  area: number;
 }
 
 export function PanelInputs(props: PanelInputsProps) {
@@ -11,7 +11,7 @@ export function PanelInputs(props: PanelInputsProps) {
         <h3>Area of Interest (AOI)</h3>
         <small>Zoom and pan the map to set the AOI for stats </small>
         <p>
-          Currently selected: <strong>{area} km&sup2;</strong>
+          Currently selected: <strong>{area || "-"} km&sup2;</strong>
         </p>
       </section>
       <section>
