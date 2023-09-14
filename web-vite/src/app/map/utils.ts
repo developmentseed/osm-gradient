@@ -19,14 +19,14 @@ export async function getFgbData(map: any) {
   let i = 0;
   const geojson = { type: "FeatureCollection", features: [] };
 
-  let iter = flatgeobuf.deserialize(
+  const iter = flatgeobuf.deserialize(
     "https://storage.googleapis.com/osm-tardis/2013-02-03T15%3A00.fgb",
-    fbgBbox(map)
+    fbgBbox(map),
   );
 
-  let timestamps = new Set();
+  const timestamps = new Set();
 
-  for await (let feature of iter) {
+  for await (const feature of iter) {
     if (
       feature.properties.type !== "relation" &&
       (feature.properties.changeType === "added" ||
@@ -60,7 +60,7 @@ export function calculateStats(geojson: any) {
     users: {},
   };
 
-  for (let feature of geojson.features) {
+  for (const feature of geojson.features) {
     const changeType = feature.properties.changeType;
     if (
       changeType === "added" ||
