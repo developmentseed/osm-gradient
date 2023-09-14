@@ -1,13 +1,13 @@
-import { useReducerAsync } from 'use-reducer-async';
-import logReducer from './log.ts';
-import { calculateStats, getFgbData } from '../map/utils.ts';
-import tArea from '@turf/area';
-import tBboxPolygon from '@turf/bbox-polygon';
+import { useReducerAsync } from "use-reducer-async";
+import logReducer from "./log.ts";
+import { calculateStats, getFgbData } from "../map/utils.ts";
+import tArea from "@turf/area";
+import tBboxPolygon from "@turf/bbox-polygon";
 
 export enum MapStatus {
-  IDLE = 'IDLE',
-  LOADING = 'LOADING',
-  READY = 'READY',
+  IDLE = "IDLE",
+  LOADING = "LOADING",
+  READY = "READY",
 }
 
 export interface AppState {
@@ -18,12 +18,12 @@ export interface AppState {
 }
 
 export enum AppActionTypes {
-  SET_MAP_REF = 'SET_MAP_REF',
-  SET_CURRENT_TIMESTAMP = 'SET_CURRENT_TIMESTAMP',
-  UPDATE_VIEW = 'UPDATE_VIEW',
-  UPDATE_VIEW_START = 'UPDATE_VIEW_START',
-  UPDATE_VIEW_SUCCESS = 'UPDATE_VIEW_SUCCESS',
-  UPDATE_VIEW_ERROR = 'UPDATE_VIEW_ERROR',
+  SET_MAP_REF = "SET_MAP_REF",
+  SET_CURRENT_TIMESTAMP = "SET_CURRENT_TIMESTAMP",
+  UPDATE_VIEW = "UPDATE_VIEW",
+  UPDATE_VIEW_START = "UPDATE_VIEW_START",
+  UPDATE_VIEW_SUCCESS = "UPDATE_VIEW_SUCCESS",
+  UPDATE_VIEW_ERROR = "UPDATE_VIEW_ERROR",
 }
 
 export type AppAction =
@@ -57,7 +57,7 @@ export const appInitialState = {
   map: undefined,
   mapStatus: MapStatus.IDLE,
   geojson: {
-    type: 'FeatureCollection',
+    type: "FeatureCollection",
     features: [],
   },
 };
@@ -66,7 +66,7 @@ export type AppReducer<State, Action> = (state: State, action: Action) => State;
 
 function applyTimestampFilter(geojson: any, timestamp: string) {
   return {
-    type: 'FeatureCollection',
+    type: "FeatureCollection",
     features: geojson.features.filter(
       (f: any) => f.properties.timestamp === timestamp
     ),
@@ -152,7 +152,7 @@ const asyncActionHandlers: any = {
 
         const { geojson, timestamps } = await getFgbData(map);
 
-        map.getSource('data').setData(geojson);
+        map.getSource("data").setData(geojson);
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_SUCCESS,
@@ -161,7 +161,7 @@ const asyncActionHandlers: any = {
       } catch (error) {
         console.log(error);
         alert(
-          'Unexpected error while loading the map, please see console log.'
+          "Unexpected error while loading the map, please see console log."
         );
       }
     },
