@@ -1,6 +1,5 @@
-# OSM Tardis
-
+# OSM Gr∆dient
 Visualize statistics and browse OSM diffs over a map.
 
 - [Front-end app](web-vite/README.md)
-- Pipeline
+- [Pipeline](pipeline/README.md)
