@@ -18,7 +18,7 @@ export function App() {
     <Layout>
       <Header />
       <Panel>
-        <PanelInputs area={formattedArea} />
+        <PanelInputs formattedArea={formattedArea} />
         <Stats
           stats={appState.stats}
           currentTimestamp={appState.currentTimestamp}
