@@ -1,12 +1,3 @@
-# This workflow performs basic checks:
-#
-#   1. run a preparation step to install and cache node modules
-#   2. once prep succeeds, lint and test run in parallel
-#
-# The checks only run on non-draft Pull Requests. They don't run on the main
-# branch prior to deploy. It's recommended to use branch protection to avoid
-# pushes straight to 'main'.
-
 name: Checks
 
 on:
@@ -19,6 +10,7 @@ on:
 
 env:
   NODE: 18
+  WORKING_DIRECTORY: web-vite
 
 jobs:
   prep:
@@ -42,19 +34,19 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-        working-directory: web-vite
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('${{ env.WORKING_DIRECTORY }}/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - name: Install
         run: yarn install
-        working-directory: web-vite
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
   lint:
     needs: prep
@@ -72,19 +64,20 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('${{ env.WORKING_DIRECTORY }}/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - name: Install
         run: yarn install
-        working-directory: web-vite
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - name: Lint
         run: yarn lint
-        working-directory: web-vite
+        working-directory: ${{ env.WORKING_DIRECTORY }}
