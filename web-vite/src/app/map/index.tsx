@@ -68,6 +68,11 @@ export function Map(props: MapProps) {
       maxZoom: 18,
       minZoom: 0,
     });
+    let scale = new MapLibreGL.ScaleControl({
+      maxWidth: 160,
+      unit: 'metric'
+    });
+    map.addControl(scale);
 
     map.on("load", () => {
       map.addSource("data", {

@@ -1,6 +1,8 @@
 import { useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
 import { calculateStats, getFgbData } from "../map/utils.ts";
+import tArea from "@turf/area";
+import tBboxPolygon from "@turf/bbox-polygon";
 
 export enum MapStatus {
   IDLE = "IDLE",
@@ -92,8 +94,18 @@ function appReducer(state: AppState, action: AppAction) {
         currentTimestamp
       );
       const stats = calculateStats(currentTimestampGeojson);
+
+      const bounds = state.map.getBounds().toArray();
+      const [[minX, minY], [maxX, maxY]] = bounds;
+      const poly = tBboxPolygon([minX, minY, maxX, maxY]);
+      const area = tArea(poly);
+      const formattedArea = new Intl.NumberFormat().format(
+        (area / 1e6).toFixed(2)
+      );
+
       return {
         ...state,
+        formattedArea,
         stats,
         geojson,
         timestamps,
