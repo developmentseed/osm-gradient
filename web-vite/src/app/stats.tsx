@@ -22,22 +22,22 @@ export function Stats(props: StatsProps) {
           <h3>Feature Stats</h3>
           <ul class="bar-chart">
             <li class="bar-chart__bar">
-              <span class="loading"></span>
-              <span class="loading"></span>
-              <span class="loading"></span>
-              <span class="loading"></span>
+              <span class="loading" />
+              <span class="loading" />
+              <span class="loading" />
+              <span class="loading" />
             </li>
             <li class="bar-chart__bar">
-              <span class="loading"></span>
-              <span class="loading"></span>
-              <span class="loading"></span>
-              <span class="loading"></span>
+              <span class="loading" />
+              <span class="loading" />
+              <span class="loading" />
+              <span class="loading" />
             </li>
             <li class="bar-chart__bar">
-              <span class="loading"></span>
-              <span class="loading"></span>
-              <span class="loading"></span>
-              <span class="loading"></span>
+              <span class="loading" />
+              <span class="loading" />
+              <span class="loading" />
+              <span class="loading" />
             </li>
           </ul>
           <table class="loading__wrapper">
@@ -108,8 +108,8 @@ export function Stats(props: StatsProps) {
       </article>
     );
   }
-  let sortedUsers = [];
-  let sortedTags = [];
+  const sortedUsers: any[] = [];
+  const sortedTags: any[] = [];
   Object.keys(stats.users).forEach((user) => {
     sortedUsers.push([user, stats.users[user]]);
   });
@@ -149,19 +149,19 @@ export function Stats(props: StatsProps) {
                 style={`flex-basis: ${
                   (stats.buildingsAdded / stats.buildings) * 100
                 }%`}
-              ></span>
+              />
               <span
                 class="bar-chart__bar--val2"
                 style={`flex-basis: ${
                   (stats.buildingsModified / stats.buildings) * 100
                 }%`}
-              ></span>
+              />
               <span
                 class="bar-chart__bar--val3"
                 style={`flex-basis: ${
                   (stats.buildingsDeleted / stats.buildings) * 100
                 }%`}
-              ></span>
+              />
             </div>
           </li>
           <li class="bar-chart__bar">
@@ -172,19 +172,19 @@ export function Stats(props: StatsProps) {
                 style={`flex-basis: ${
                   (stats.highwaysAdded / stats.highways) * 100
                 }%`}
-              ></span>
+              />
               <span
                 class="bar-chart__bar--val2"
                 style={`flex-basis: ${
                   (stats.highwaysModified / stats.highways) * 100
                 }%`}
-              ></span>
+              />
               <span
                 class="bar-chart__bar--val3"
                 style={`flex-basis: ${
                   (stats.highwaysDeleted / stats.highways) * 100
                 }%`}
-              ></span>
+              />
             </div>
           </li>
           <li class="bar-chart__bar">
@@ -193,19 +193,19 @@ export function Stats(props: StatsProps) {
               <span
                 class="bar-chart__bar--val1"
                 style={`flex-basis: ${(stats.otherAdded / stats.other) * 100}%`}
-              ></span>
+              />
               <span
                 class="bar-chart__bar--val2"
                 style={`flex-basis: ${
                   (stats.otherModified / stats.other) * 100
                 }%`}
-              ></span>
+              />
               <span
                 class="bar-chart__bar--val3"
                 style={`flex-basis: ${
                   (stats.otherDeleted / stats.other) * 100
                 }%`}
-              ></span>
+              />
             </div>
           </li>
         </ul>
@@ -251,14 +251,14 @@ export function Stats(props: StatsProps) {
           </thead>
           <tbody>
             {sortedUsers.slice(0, 5).map((k) => (
-              <tr>
+              <tr key={k[0]}>
                 <td>{k[0]}</td>
                 <td>{k[1]}</td>
               </tr>
             ))}
             {expandedUsers &&
               sortedUsers.slice(5).map((k) => (
-                <tr>
+                <tr key={k[0]}>
                   <td>{k[0]}</td>
                   <td>{k[1]}</td>
                 </tr>
@@ -284,14 +284,14 @@ export function Stats(props: StatsProps) {
           </thead>
           <tbody>
             {sortedTags.slice(0, 5).map((k) => (
-              <tr>
+              <tr key={k[0]}>
                 <td>{k[0]}</td>
                 <td>{k[1]}</td>
               </tr>
             ))}
             {expandedTags &&
               sortedTags.slice(5).map((k) => (
-                <tr>
+                <tr key={k[0]}>
                   <td>{k[0]}</td>
                   <td>{k[1]}</td>
                 </tr>
