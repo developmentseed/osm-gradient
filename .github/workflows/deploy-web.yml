@@ -29,6 +29,10 @@ jobs:
         run: yarn install
         working-directory: web-vite
 
+      - name: Lint
+        run: yarn lint
+        working-directory: web-vite
+
       - name: Deploy to surge
         run: yarn deploy
         working-directory: web-vite
