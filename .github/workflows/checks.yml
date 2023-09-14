@@ -10,7 +10,7 @@ on:
 
 env:
   NODE: 18
-  WORKING_DIRECTORY: web-vite
+  WORKING_DIRECTORY: web
 
 jobs:
   prep:
