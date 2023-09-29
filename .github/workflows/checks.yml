@@ -1,0 +1,83 @@
+name: Checks
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+env:
+  NODE: 18
+  WORKING_DIRECTORY: web
+
+jobs:
+  prep:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ env.NODE }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('${{ env.WORKING_DIRECTORY }}/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        run: yarn install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+  lint:
+    needs: prep
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ env.NODE }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('${{ env.WORKING_DIRECTORY }}/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        run: yarn install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Lint
+        run: yarn lint
+        working-directory: ${{ env.WORKING_DIRECTORY }}
