@@ -53,7 +53,7 @@ jobs:
         
         - name: convert to fgb
           run: |
-            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${CURRENT_DATE}T${PADDED_HOUR}.fgb /tmp/${CURRENT_DATE}T${PADDED_HOUR}.geojson -skipfailures"
+            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${CURRENT_DATE}T${PADDED_HOUR}:00.fgb /tmp/${CURRENT_DATE}T${PADDED_HOUR}:00.geojson -skipfailures"
           env:
             CURRENT_DATE: ${{ steps.set_date.outputs.CURRENT_DATE }}
             PADDED_HOUR: ${{ steps.padded_hour.outputs.PADDED_HOUR }}
