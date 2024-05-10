@@ -20,25 +20,43 @@ jobs:
         - name: Build docker image
           run: docker build -t gradient-pipeline ./pipeline
 
-        - name: Run the pipeline
+        - name: set date
+          id: set_date
           run: |
             current_date=$(date +%Y-%m-%d)
+            echo "CURRENT_DATE=$current_date" >> $GITHUB_OUTPUT
+        
+        - name: set hour minus two
+          id: set_hour
+          run: |
             current_hour=$(date +%H)
             hour_minus_two=$((current_hour - 2))
-            if [ $hour_minus_two -lt 0 ]; then
-              current_date=$(date -d "-1 day" +%Y-%m-%d)
-              hour_minus_two=$((current_hour + 22))
+            echo "CURRENT_HOUR=$current_hour" >> $GITHUB_OUTPUT
+            echo "HOUR_MINUS_TWO=$hour_minus_two" >> $GITHUB_OUTPUT
+        
+        - name: process changesets
+          run: |
+            docker run -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $CURRENT_DATE $HOUR_MINUS_TWO"
+          env:
+            CURRENT_DATE: ${{ steps.set_date.outputs.CURRENT_DATE }}
+            HOUR_MINUS_TWO: ${{ steps.set_hour.outputs.HOUR_MINUS_TWO }}
+        
+        - name: padded hour
+          id: padded_hour
+          run: |
+            if [[ $HOUR_MINUS_TWO -lt 10 && $HOUR_MINUS_TWO -gt 0 ]]; then
+              HOUR_MINUS_TWO="0$HOUR_MINUS_TWO"
             fi
-            docker run -it -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $current_date $hour_minus_two"
-            if [ $? -eq 0 ]; then
-              # Add a leading zero if the hour is less than 10
-              [[ $hour_minus_two -lt 10 && $hour_minus_two -ge 0 ]] && hour_minus_two="0$hour_minus_two"
-              file_name="${current_date}T${hour_minus_two}"
-              docker run -it -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${file_name}.fgb /tmp/${file_name}.geojson -skipfailures"
-            else
-              echo "Previous command failed"
-              exit 1
-            fi
+            echo "PADDED_HOUR=$HOUR_MINUS_TWO" >> $GITHUB_OUTPUT
+          env:
+            HOUR_MINUS_TWO: ${{ steps.set_hour.outputs.HOUR_MINUS_TWO }}
+        
+        - name: convert to fgb
+          run: |
+            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${CURRENT_DATE}T${PADDED_HOUR}.fgb /tmp/${CURRENT_DATE}T${PADDED_HOUR}.geojson -skipfailures"
+          env:
+            CURRENT_DATE: ${{ steps.set_date.outputs.CURRENT_DATE }}
+            PADDED_HOUR: ${{ steps.padded_hour.outputs.PADDED_HOUR }}
         
         - name: Check if the pipeline ran successfully
           run: ls -lh ./data
