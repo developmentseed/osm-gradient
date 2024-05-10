@@ -1,0 +1,49 @@
+name: Hourly Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - new-pipeline
+  # schedule:
+  # - cron: "0 * * * *"
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Build docker image
+          run: docker build -t gradient-pipeline ./pipeline
+
+        - name: Run the pipeline
+          run: |
+            current_date=$(date +%Y-%m-%d)
+            current_hour=$(date +%H)
+            hour_minus_two=$((current_hour - 2))
+            if [ $hour_minus_two -lt 0 ]; then
+              current_date=$(date -d "-1 day" +%Y-%m-%d)
+              hour_minus_two=$((current_hour + 22))
+            fi
+            docker run -it -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $current_date $hour_minus_two"
+            if [ $? -eq 0 ]; then
+              # Add a leading zero if the hour is less than 10
+              [[ $hour_minus_two -lt 10 && $hour_minus_two -ge 0 ]] && hour_minus_two="0$hour_minus_two"
+              file_name="${current_date}T${hour_minus_two}"
+              docker run -it -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${file_name}.fgb /tmp/${file_name}.geojson -skipfailures"
+            else
+              echo "Previous command failed"
+              exit 1
+            fi
+        
+        - name: Check if the pipeline ran successfully
+          run: ls -lh ./data
+
+        # - name: Upload the FGB to Cloud Storage
+
+
+            
