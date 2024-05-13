@@ -10,7 +10,7 @@ on:
 
 
 jobs:
-  build:
+  generate-hourly-fgb:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,16 +41,6 @@ jobs:
           env:
             DATE_TWO_HOURS_AGO: ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
             HOUR_TWO_HOURS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}
-        
-        # - name: padded hour
-        #   id: padded_hour
-        #   run: |
-        #     if [[ $HOUR_TWO_HOURS_AGO -lt 10 && $HOUR_TWO_HOURS_AGO -gt 0 ]]; then
-        #       HOUR_TWO_HOURS_AGO="0$HOUR_TWO_HOURS_AGO"
-        #     fi
-        #     echo "PADDED_HOUR=$HOUR_TWO_HOURS_AGO" >> $GITHUB_OUTPUT
-        #   env:
-        #     HOUR_TWO_HOURS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}
         
         - name: convert to fgb for the hour ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
           run: |

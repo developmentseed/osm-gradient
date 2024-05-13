@@ -14,8 +14,8 @@ const { processChangesets } = require('./src/process');
 async function run(date, hour) {
     let url = getHourlyReplicationFileURL(date, hour);
     let changesets = await getChangesetIDs(url);
-    changesets = changesets.slice(0, 2);
-    console.log(changesets);
+    // changesets = changesets.slice(0, 2);
+    // console.log(changesets);
     processChangesets(changesets, date, hour);
 }
 
