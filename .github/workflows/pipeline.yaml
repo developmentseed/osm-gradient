@@ -34,7 +34,7 @@ jobs:
             echo "CURRENT_HOUR=$current_hour" >> $GITHUB_OUTPUT
             echo "HOUR_MINUS_TWO=$hour_minus_two" >> $GITHUB_OUTPUT
         
-        - name: process changesets
+        - name: process changesets for the hour ${{ steps.set_hour.outputs.HOUR_MINUS_TWO }}:00 on ${{ steps.set_date.outputs.CURRENT_DATE }}
           run: |
             docker run -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $CURRENT_DATE $HOUR_MINUS_TWO"
           env:
@@ -51,7 +51,7 @@ jobs:
           env:
             HOUR_MINUS_TWO: ${{ steps.set_hour.outputs.HOUR_MINUS_TWO }}
         
-        - name: convert to fgb
+        - name: convert to fgb for the hour ${{ steps.padded_hour.outputs.PADDED_HOUR }}:00 on ${{ steps.set_date.outputs.CURRENT_DATE }}
           run: |
             docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${CURRENT_DATE}T${PADDED_HOUR}:00.fgb /tmp/${CURRENT_DATE}T${PADDED_HOUR}:00.geojson -skipfailures"
           env:
