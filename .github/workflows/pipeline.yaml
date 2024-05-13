@@ -23,45 +23,54 @@ jobs:
         - name: set date
           id: set_date
           run: |
-            current_date=$(date +%Y-%m-%d)
-            echo "CURRENT_DATE=$current_date" >> $GITHUB_OUTPUT
+            DATE_TWO_HOURS_AGO=$(date -d "2 hours ago" +%Y-%m-%d)
+            echo "DATE_TWO_HOURS_AGO=$DATE_TWO_HOURS_AGO" >> $GITHUB_OUTPUT
         
-        - name: set hour minus two
+        - name: set hour
           id: set_hour
           run: |
-            current_hour=$(date +%H)
-            hour_minus_two=$((current_hour - 2))
-            echo "CURRENT_HOUR=$current_hour" >> $GITHUB_OUTPUT
-            echo "HOUR_MINUS_TWO=$hour_minus_two" >> $GITHUB_OUTPUT
+            HOUR_TWO_HOURS_AGO=$(date -d "2 hours ago" +%H)
+            echo "HOUR_TWO_HOURS_AGO=$HOUR_TWO_HOURS_AGO" >> $GITHUB_OUTPUT
         
-        - name: process changesets for the hour ${{ steps.set_hour.outputs.HOUR_MINUS_TWO }}:00 on ${{ steps.set_date.outputs.CURRENT_DATE }}
-          run: |
-            docker run -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $CURRENT_DATE $HOUR_MINUS_TWO"
-          env:
-            CURRENT_DATE: ${{ steps.set_date.outputs.CURRENT_DATE }}
-            HOUR_MINUS_TWO: ${{ steps.set_hour.outputs.HOUR_MINUS_TWO }}
+        - name: Check if the date and hour are set
+          run: cat $GITHUB_OUTPUT
         
-        - name: padded hour
-          id: padded_hour
+        - name: process changesets for the hour ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
           run: |
-            if [[ $HOUR_MINUS_TWO -lt 10 && $HOUR_MINUS_TWO -gt 0 ]]; then
-              HOUR_MINUS_TWO="0$HOUR_MINUS_TWO"
-            fi
-            echo "PADDED_HOUR=$HOUR_MINUS_TWO" >> $GITHUB_OUTPUT
+            docker run -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $DATE_TWO_HOURS_AGO $HOUR_TWO_HOURS_AGO"
           env:
-            HOUR_MINUS_TWO: ${{ steps.set_hour.outputs.HOUR_MINUS_TWO }}
+            DATE_TWO_HOURS_AGO: ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
+            HOUR_TWO_HOURS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}
         
-        - name: convert to fgb for the hour ${{ steps.padded_hour.outputs.PADDED_HOUR }}:00 on ${{ steps.set_date.outputs.CURRENT_DATE }}
+        # - name: padded hour
+        #   id: padded_hour
+        #   run: |
+        #     if [[ $HOUR_TWO_HOURS_AGO -lt 10 && $HOUR_TWO_HOURS_AGO -gt 0 ]]; then
+        #       HOUR_TWO_HOURS_AGO="0$HOUR_TWO_HOURS_AGO"
+        #     fi
+        #     echo "PADDED_HOUR=$HOUR_TWO_HOURS_AGO" >> $GITHUB_OUTPUT
+        #   env:
+        #     HOUR_TWO_HOURS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}
+        
+        - name: convert to fgb for the hour ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
           run: |
-            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${CURRENT_DATE}T${PADDED_HOUR}:00.fgb /tmp/${CURRENT_DATE}T${PADDED_HOUR}:00.geojson -skipfailures"
+            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${DATE_TWO_HOURS_AGO}T${HOUR_TWO_HOURS_AGO}:00.fgb /tmp/${DATE_TWO_HOURS_AGO}T${HOUR_TWO_HOURS_AGO}:00.geojson -skipfailures"
           env:
-            CURRENT_DATE: ${{ steps.set_date.outputs.CURRENT_DATE }}
-            PADDED_HOUR: ${{ steps.padded_hour.outputs.PADDED_HOUR }}
+            DATE_TWO_HOURS_AGO: ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
+            HOUR_TWO_HOURS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}
         
         - name: Check if the pipeline ran successfully
           run: ls -lh ./data
 
-        # - name: Upload the FGB to Cloud Storage
-
-
-            
+        - name: Authenticate with GCP
+          uses: google-github-actions/auth@v2
+          with:
+            credentials_json: ${{ secrets.GCS_SERVICE_ACCOUNT_KEY }}
+        
+        - name: Upload to GCS
+          uses: google-github-actions/upload-cloud-storage@v2
+          with:
+            path: data
+            destination: osm-tardis
+            parent: false
+            glob: '*.fgb'

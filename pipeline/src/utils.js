@@ -11,6 +11,7 @@ const sax = require('sax');
 function getHourlyReplicationFileURL(date, hour) {
     // Add a leading zero to the hour if it is a single digit
     hour = hour.toString().padStart(2, '0');
+    console.log(`Got date: ${date} and hour: ${hour}`)
     let startDate = new Date(`${date}T${hour}:00:00Z`);
     console.log(`Processing an hour of data starting from ${startDate}`);
     // Calculate the sequence number for the hourly replication file from the date
