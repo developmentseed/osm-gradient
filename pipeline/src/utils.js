@@ -76,4 +76,19 @@ async function getChangesetIDs(replicationFileURL) {
     });
 }
 
-module.exports = { getHourlyReplicationFileURL, getChangesetIDs };
+/**
+ * Checks if the given coordinates are valid.
+ * @param {number|number[]} coordinates - The coordinates to check.
+ * @returns {boolean} true if the coordinates are invalid, false otherwise.
+ */
+function containsInvalidCoordinate(coordinates) {
+    if (coordinates === null || coordinates === undefined || coordinates === Infinity || coordinates === -Infinity) {
+        return true;
+    } else if (Array.isArray(coordinates)) {
+        return coordinates.some(containsInvalidCoordinate);
+    } else {
+        return false;
+    }
+}
+
+module.exports = { getHourlyReplicationFileURL, getChangesetIDs, containsInvalidCoordinate };

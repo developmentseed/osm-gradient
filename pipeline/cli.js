@@ -3,7 +3,7 @@
 const { program } = require('commander');
 
 const { getHourlyReplicationFileURL, getChangesetIDs } = require('./src/utils');
-const { processChangesets } = require('./src/process');
+const { processChangesets, processChangeset } = require('./src/process');
 
 /**
  * Runs the process to retrieve and process changesets for a given date and hour.
@@ -19,9 +19,18 @@ async function run(date, hour) {
     processChangesets(changesets, date, hour);
 }
 
+async function processSingleChangeset(changeset) {
+    await processChangeset(changeset);
+}
+
 program
     .command('process-hour <date> <hour>')
     .description('Process an hour of changesets starting from a given date and hour (in UTC) and combine the changed features into a single GeoJSON file.')
     .action(run);
+
+program
+    .command('process-changeset <changeset>')
+    .description('Process a single changeset and save the features to a JSON file - for debugging purposes.')
+    .action(processSingleChangeset);
 
 program.parseAsync(process.argv);

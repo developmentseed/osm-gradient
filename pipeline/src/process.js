@@ -4,6 +4,7 @@ const fs = require('fs');
 const readline = require('readline');
 
 const config = require('./config');
+const { containsInvalidCoordinate } = require('./utils');
 
 /**
  * Processes an array of changesets asynchronously.
@@ -16,12 +17,16 @@ async function processChangesets(changesets, date, hour) {
     // Array to store the file paths of the processed changesets
     const results = [];
 
-    // Process each changeset asynchronously
-    await Promise.all(changesets.map(async (changeset) => {
-        // Process the changeset and get the result
-        const result = await processChangeset(changeset);
-        results.push(result);
-    }));
+    // Process changesets in batches of 10
+    const batchSize = 100;
+    for (let i = 0; i < changesets.length; i += batchSize) {
+        const batch = changesets.slice(i, i + batchSize);
+        await Promise.all(batch.map(async (changeset) => {
+            // Process the changeset and get the result
+            const result = await processChangeset(changeset);
+            results.push(result);
+        }));
+    }
 
     // Combine the processed changesets into a single file
     combineResults(results, date, hour);
@@ -35,26 +40,38 @@ async function processChangesets(changesets, date, hour) {
 async function processChangeset(changeset) {
     // Process the changeset asynchronously and return the result
     const url = `https://real-changesets.s3.amazonaws.com/${changeset}.json`;
+    // console.log(`Processing changeset ${changeset}`);
     try {
         const response = await axios.get(url);
         const data = response.data;
         const geojson = changesetParser(data);
+        // console.log(`geojson: ${JSON.stringify(geojson)}`);
         const features = geojson.features;
+
+        if (features.length === 0) {
+            console.log(`No features found in changeset ${changeset}`);
+            return;
+        }
         const filePath = `${config.DATA_PATH}/${changeset}_features.json`;
-        await fs.writeFile(filePath, '', (error) => {
-            if (error) {
-                console.error(`Error writing to file: ${error}`);
-            }
-        });
-        features.forEach(async (feature) => {
-            const featureString = JSON.stringify(feature);
-            
-            await fs.appendFile(filePath, `${featureString}\n`, (error) => {
-                if (error) {
-                    console.error(`Error writing feature to file: ${error}`);
+
+        await Promise.all(features.map(async (feature) => {
+            if (feature !== null && feature !== undefined) {
+                if (containsInvalidCoordinate(feature.geometry.coordinates)) {
+                    console.log(`Dropping invalid feature ${feature.properties.id} in changeset ${changeset}`);
+                    console.log(`Feature geometry containing invalid co-ordinates: ${JSON.stringify(feature.geometry)}`);
+                    return;
                 }
-            });
-        });
+                const featureString = JSON.stringify(feature);
+                
+                await fs.appendFile(filePath, `${featureString}\n`, (error) => {
+                    if (error) {
+                        console.error(`Error writing feature to file: ${error}`);
+                    }
+                });
+            } else {
+                console.log(`undefined feature skipped in changeset ${changeset}`)
+            }
+        }));
         return filePath;
     } catch (error) {
         console.error(`Error processing changeset ${changeset}: ${error}`);
@@ -78,6 +95,9 @@ async function combineResults(results, date, hour) {
 
     for (let i = 0; i < results.length; i++) {
         const filePath = results[i];
+        if (!filePath) {
+            continue;
+        }
         const inputStream = fs.createReadStream(filePath);
 
         const rl = readline.createInterface({
@@ -88,7 +108,7 @@ async function combineResults(results, date, hour) {
 
         rl.on('line', (line) => {
             outputStream.write(divider);
-            divider = ',';
+            divider = ',\n';
             outputStream.write(line);
         });
 
@@ -98,7 +118,7 @@ async function combineResults(results, date, hour) {
             });
 
             rl.on('error', (error) => {
-                reject(error);
+                console.error(`Error reading file: ${error}`);
             });
         });
     }
@@ -108,4 +128,4 @@ async function combineResults(results, date, hour) {
     console.log(`Combined results written to ${outputStream.path}`);
 }
 
-module.exports = { processChangesets };
+module.exports = { processChangesets, processChangeset };
