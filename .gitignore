@@ -3,3 +3,7 @@ node_modules/
 out
 package-lock.json
 .pnp*
+
+pipeline/node_modules
+pipeline/.yarn
+pipeline/data
