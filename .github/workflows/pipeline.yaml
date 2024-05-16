@@ -20,31 +20,31 @@ jobs:
         - name: set date
           id: set_date
           run: |
-            DATE_TWO_HOURS_AGO=$(date -d "2 hours ago" +%Y-%m-%d)
-            echo "DATE_TWO_HOURS_AGO=$DATE_TWO_HOURS_AGO" >> $GITHUB_OUTPUT
+            DATE_TWO_DAYS_AGO=$(date -d "2 days ago" +%Y-%m-%d)
+            echo "DATE_TWO_DAYS_AGO=$DATE_TWO_DAYS_AGO" >> $GITHUB_OUTPUT
         
         - name: set hour
           id: set_hour
           run: |
-            HOUR_TWO_HOURS_AGO=$(date -d "2 hours ago" +%H)
-            echo "HOUR_TWO_HOURS_AGO=$HOUR_TWO_HOURS_AGO" >> $GITHUB_OUTPUT
+            HOUR_TWO_DAYS_AGO=$(date -d "2 days ago" +%H)
+            echo "HOUR_TWO_DAYS_AGO=$HOUR_TWO_DAYS_AGO" >> $GITHUB_OUTPUT
         
         - name: Check if the date and hour are set
           run: cat $GITHUB_OUTPUT
         
-        - name: process changesets for the hour ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
+        - name: process changesets for the hour ${{ steps.set_hour.outputs.HOUR_TWO_DAYS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_DAYS_AGO }}
           run: |
-            docker run -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $DATE_TWO_HOURS_AGO $HOUR_TWO_HOURS_AGO"
+            docker run -v ./data:/tmp gradient-pipeline sh -c "node cli.js process-hour $DATE_TWO_DAYS_AGO $HOUR_TWO_DAYS_AGO"
           env:
-            DATE_TWO_HOURS_AGO: ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
-            HOUR_TWO_HOURS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}
+            DATE_TWO_DAYS_AGO: ${{ steps.set_date.outputs.DATE_TWO_DAYS_AGO }}
+            HOUR_TWO_DAYS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_DAYS_AGO }}
         
-        - name: convert to fgb for the hour ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
+        - name: convert to fgb for the hour ${{ steps.set_hour.outputs.HOUR_TWO_DAYS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_DAYS_AGO }}
           run: |
-            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${DATE_TWO_HOURS_AGO}T${HOUR_TWO_HOURS_AGO}:00.fgb /tmp/${DATE_TWO_HOURS_AGO}T${HOUR_TWO_HOURS_AGO}:00.geojson -skipfailures"
+            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${DATE_TWO_DAYS_AGO}T${HOUR_TWO_DAYS_AGO}:00.fgb /tmp/${DATE_TWO_DAYS_AGO}T${HOUR_TWO_DAYS_AGO}:00.geojson -skipfailures"
           env:
-            DATE_TWO_HOURS_AGO: ${{ steps.set_date.outputs.DATE_TWO_HOURS_AGO }}
-            HOUR_TWO_HOURS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_HOURS_AGO }}
+            DATE_TWO_DAYS_AGO: ${{ steps.set_date.outputs.DATE_TWO_DAYS_AGO }}
+            HOUR_TWO_DAYS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_DAYS_AGO }}
         
         - name: Check if the pipeline ran successfully
           run: ls -lh ./data/*.fgb
