@@ -63,4 +63,4 @@ jobs:
             glob: '*.fgb'
             gzip: false
             headers: |-
-              Content-Type: application/octet-stream
+              content-type: application/octet-stream
