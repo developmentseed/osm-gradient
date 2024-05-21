@@ -16,6 +16,11 @@ const { containsInvalidCoordinate } = require('./utils');
 async function processChangesets(changesets, date, hour) {
     // Array to store the file paths of the processed changesets
     const results = [];
+    const dataPath = `${config.DATA_PATH}/${date}T${hour}`;
+    // create the directory if it does not exist
+    if (!fs.existsSync(dataPath)) {
+        fs.mkdirSync(dataPath, { recursive: true });
+    }
 
     // Process changesets in batches of 10
     const batchSize = 100;
@@ -23,7 +28,7 @@ async function processChangesets(changesets, date, hour) {
         const batch = changesets.slice(i, i + batchSize);
         await Promise.all(batch.map(async (changeset) => {
             // Process the changeset and get the result
-            const result = await processChangeset(changeset);
+            const result = await processChangeset(changeset, dataPath);
             results.push(result);
         }));
     }
@@ -35,9 +40,10 @@ async function processChangesets(changesets, date, hour) {
 /**
  * Processes a single changeset and returns the file path of the processed changeset.
  * @param {string} changeset - The changeset ID.
+ * @param {string} dataPath - The path to the directory where the processed changesets will be stored.
  * @returns {Promise<string>} A promise that resolves to the file path of the processed changeset.
  */
-async function processChangeset(changeset) {
+async function processChangeset(changeset, dataPath) {
     // Process the changeset asynchronously and return the result
     const url = `https://real-changesets.s3.amazonaws.com/${changeset}.json`;
     // console.log(`Processing changeset ${changeset}`);
@@ -52,7 +58,7 @@ async function processChangeset(changeset) {
             console.log(`No features found in changeset ${changeset}`);
             return;
         }
-        const filePath = `${config.DATA_PATH}/${changeset}_features.json`;
+        const filePath = `${dataPath}/${changeset}_features.json`;
 
         await Promise.all(features.map(async (feature) => {
             if (feature !== null && feature !== undefined) {
@@ -87,7 +93,8 @@ async function processChangeset(changeset) {
  */
 async function combineResults(results, date, hour) {
     console.log(`Combining results from ${results.length} changesets`);
-    const outputStream = fs.createWriteStream(`${config.DATA_PATH}/${date}T${hour}:00.geojson`);
+    const dataPath = `${config.DATA_PATH}/${date}T${hour}`;
+    const outputStream = fs.createWriteStream(`${dataPath}/${date}T${hour}:00.geojson`);
 
     outputStream.write('{"type":"FeatureCollection","features":[');
 
