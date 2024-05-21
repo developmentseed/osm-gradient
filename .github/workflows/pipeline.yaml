@@ -61,3 +61,6 @@ jobs:
             destination: osm-tardis
             parent: false
             glob: '*.fgb'
+            gzip: false
+            headers: |-
+              Content-Type: application/octet-stream
