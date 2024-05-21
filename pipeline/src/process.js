@@ -119,6 +119,7 @@ async function combineResults(results, date, hour) {
 
             rl.on('error', (error) => {
                 console.error(`Error reading file: ${error}`);
+                resolve();
             });
         });
     }
