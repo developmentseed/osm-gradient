@@ -41,7 +41,7 @@ jobs:
         
         - name: convert to fgb for the hour ${{ steps.set_hour.outputs.HOUR_TWO_DAYS_AGO }}:00 on ${{ steps.set_date.outputs.DATE_TWO_DAYS_AGO }}
           run: |
-            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${DATE_TWO_DAYS_AGO}T${HOUR_TWO_DAYS_AGO}:00.fgb /tmp/${DATE_TWO_DAYS_AGO}T${HOUR_TWO_DAYS_AGO}:00.geojson -skipfailures"
+            docker run -v ./data:/tmp gradient-pipeline sh -c "ogr2ogr -f FlatGeobuf /tmp/${DATE_TWO_DAYS_AGO}T${HOUR_TWO_DAYS_AGO}:00.fgb /tmp/${DATE_TWO_DAYS_AGO}T${HOUR_TWO_DAYS_AGO}/${DATE_TWO_DAYS_AGO}T${HOUR_TWO_DAYS_AGO}:00.geojson -skipfailures"
           env:
             DATE_TWO_DAYS_AGO: ${{ steps.set_date.outputs.DATE_TWO_DAYS_AGO }}
             HOUR_TWO_DAYS_AGO: ${{ steps.set_hour.outputs.HOUR_TWO_DAYS_AGO }}
