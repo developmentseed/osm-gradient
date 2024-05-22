@@ -3,7 +3,7 @@ name: Hourly Pipeline
 on:
   workflow_dispatch:
   schedule:
-  - cron: "50 * * * *"
+  - cron: "10 * * * *"
 
 
 jobs:
