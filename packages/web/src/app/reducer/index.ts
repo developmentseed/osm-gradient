@@ -1,8 +1,9 @@
 import { useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
-import { calculateStats, getFgbData } from "../map/utils.ts";
+import { calculateStats } from "../map/utils.ts";
 import tArea from "@turf/area";
 import tBboxPolygon from "@turf/bbox-polygon";
+import { getFgbData } from "../utils/get-fgb-data.ts";
 
 // TODO move to types.ts
 /* eslint-disable no-unused-vars */
@@ -151,7 +152,7 @@ const asyncActionHandlers: any = {
           type: AppActionTypes.UPDATE_VIEW_START,
         });
 
-        const { geojson, timestamps } = await getFgbData(map);
+        const { geojson, timestamps } = await getFgbData({ map });
 
         map.getSource("data").setData(geojson);
 
