@@ -1,19 +1,5 @@
 import { geojson as flatgeobuf } from "flatgeobuf";
-
-export function fbgBbox(map: any) {
-  const { lng, lat } = map.getCenter();
-  const { _sw, _ne } = map.getBounds();
-  const distanceX =
-    Math.min(Math.abs(_sw.lng - lng), Math.abs(_ne.lng - lng)) * 0.9;
-  const distanceY =
-    Math.min(Math.abs(_sw.lat - lat), Math.abs(_ne.lat - lat)) * 0.9;
-  return {
-    minX: lng - distanceX,
-    minY: lat - distanceY,
-    maxX: lng + distanceX,
-    maxY: lat + distanceY,
-  };
-}
+import { getFlatGeobufRectangle } from "../utils/get-flatgeobuf-rect";
 
 export async function getFgbData(map: any) {
   let i = 0;
@@ -21,7 +7,7 @@ export async function getFgbData(map: any) {
 
   const iter = flatgeobuf.deserialize(
     "https://storage.googleapis.com/osm-tardis/2013-02-03T15%3A00.fgb",
-    fbgBbox(map),
+    getFlatGeobufRectangle(map),
   ) as AsyncGenerator<any>;
 
   const timestamps = new Set();
