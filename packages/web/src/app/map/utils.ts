@@ -1,4 +1,21 @@
-export function calculateStats(geojson: any) {
+interface Stats {
+  tags: Record<string, number>;
+  buildings: number;
+  buildingsAdded: number;
+  buildingsModified: number;
+  buildingsDeleted: number;
+  highways: number;
+  highwaysAdded: number;
+  highwaysModified: number;
+  highwaysDeleted: number;
+  other: number;
+  otherAdded: number;
+  otherModified: number;
+  otherDeleted: number;
+  users: Record<string, number>;
+}
+
+export function calculateStats(geojson: GeoJSON.FeatureCollection) {
   const stats = {
     tags: {},
     buildings: 0,
@@ -14,9 +31,13 @@ export function calculateStats(geojson: any) {
     otherModified: 0,
     otherDeleted: 0,
     users: {},
-  };
+  } as Stats;
 
   for (const feature of geojson.features) {
+    if (!feature.properties) {
+      continue;
+    }
+
     const changeType = feature.properties.changeType;
     if (
       changeType === "added" ||
