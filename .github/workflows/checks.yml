@@ -10,7 +10,7 @@ on:
 
 env:
   NODE: 18
-  WORKING_DIRECTORY: web
+  WORKING_DIRECTORY: packages/web
 
 jobs:
   prep:
