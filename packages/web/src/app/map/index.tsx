@@ -9,7 +9,7 @@ interface MapProps {
 
 const MAP_OPTIONS = {
   center: [-74.5087291, 40.28],
-  zoom: 14,
+  zoom: 8,
 } as {
   center: [number, number];
   zoom: number;
