@@ -2,12 +2,22 @@ import { geojson as flatgeobuf } from "flatgeobuf";
 import { getFlatGeobufRectangle } from "./get-fgb-rect";
 import { Map } from "maplibre-gl";
 
-export async function getFgbData({ map }: { map: Map }) {
+export async function getFgbData({
+  map,
+  timestamp,
+}: {
+  map: Map;
+  timestamp: Date;
+}) {
   let i = 0;
   const geojson = { type: "FeatureCollection", features: [] as any[] };
 
+  const filename = `https://storage.googleapis.com/osm-tardis/${timestamp
+    .toISOString()
+    .slice(0, 13)}%3A00.fgb`;
+
   const iter = flatgeobuf.deserialize(
-    "https://storage.googleapis.com/osm-tardis/2013-02-03T15%3A00.fgb",
+    filename,
     getFlatGeobufRectangle(map),
   ) as AsyncGenerator<any>;
 

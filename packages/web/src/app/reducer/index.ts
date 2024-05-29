@@ -4,6 +4,14 @@ import { calculateStats } from "../map/utils.ts";
 import tArea from "@turf/area";
 import tBboxPolygon from "@turf/bbox-polygon";
 import { getFgbData } from "../utils/get-fgb-data.ts";
+import { Map } from "maplibre-gl";
+
+const availableTimestamps = [
+  `2024-05-19T05:00:00Z`,
+  `2024-05-19T06:00:00Z`,
+  `2024-05-19T07:00:00Z`,
+  `2024-05-19T08:00:00Z`,
+];
 
 // TODO move to types.ts
 /* eslint-disable no-unused-vars */
@@ -29,6 +37,7 @@ export interface AppState {
   map: any;
   mapStatus: MapStatus;
   geojson?: any;
+  currentTimestamp?: Date;
   currentTimestampGeojson?: any;
 }
 
@@ -36,13 +45,13 @@ export type AppAction =
   | {
       type: AppActionTypes.SET_MAP_REF;
       data: {
-        map: any;
+        map: Map;
       };
     }
   | {
       type: AppActionTypes.SET_CURRENT_TIMESTAMP;
       data: {
-        currentTimestamp: string;
+        currentTimestamp: Date;
       };
     }
   | {
@@ -66,16 +75,9 @@ export const appInitialState = {
     type: "FeatureCollection",
     features: [],
   },
+  currentTimestamp: new Date(availableTimestamps[2]),
+  timestamps: [...availableTimestamps],
 };
-
-function applyTimestampFilter(geojson: any, timestamp: string) {
-  return {
-    type: "FeatureCollection",
-    features: geojson.features.filter(
-      (f: any) => f.properties.timestamp === timestamp,
-    ),
-  };
-}
 
 function appReducer(state: AppState, action: AppAction) {
   switch (action.type) {
@@ -91,13 +93,10 @@ function appReducer(state: AppState, action: AppAction) {
         mapStatus: MapStatus.LOADING,
       };
     case AppActionTypes.UPDATE_VIEW_SUCCESS: {
-      const { geojson, timestamps } = action.data;
-      const currentTimestamp = timestamps[timestamps.length - 1];
-      const currentTimestampGeojson = applyTimestampFilter(
-        geojson,
-        currentTimestamp,
-      );
-      const stats = calculateStats(currentTimestampGeojson);
+      const { geojson } = action.data;
+      const { currentTimestamp } = state;
+
+      const stats = calculateStats(geojson);
 
       const bounds = state.map.getBounds().toArray();
       const [[minX, minY], [maxX, maxY]] = bounds;
@@ -110,18 +109,15 @@ function appReducer(state: AppState, action: AppAction) {
         formattedArea,
         stats,
         geojson,
-        timestamps,
         currentTimestamp,
-        currentTimestampGeojson,
+        currentTimestampGeojson: currentTimestamp,
         mapStatus: MapStatus.READY,
       };
     }
     case AppActionTypes.SET_CURRENT_TIMESTAMP: {
       const { currentTimestamp } = action.data;
-      const currentTimestampGeojson = applyTimestampFilter(
-        state.geojson,
-        currentTimestamp,
-      );
+
+      const currentTimestampGeojson = state.geojson;
       const stats = calculateStats(currentTimestampGeojson);
       return {
         ...state,
@@ -141,7 +137,7 @@ const asyncActionHandlers: any = {
     ({ dispatch, getState }: any) =>
     async () => {
       try {
-        const { map, mapStatus } = getState();
+        const { map, mapStatus, currentTimestamp } = getState();
 
         // Only update the view if the map is ready
         if (mapStatus !== MapStatus.READY) {
@@ -152,7 +148,10 @@ const asyncActionHandlers: any = {
           type: AppActionTypes.UPDATE_VIEW_START,
         });
 
-        const { geojson, timestamps } = await getFgbData({ map });
+        const { geojson, timestamps } = await getFgbData({
+          map,
+          timestamp: currentTimestamp,
+        });
 
         map.getSource("data").setData(geojson);
 
