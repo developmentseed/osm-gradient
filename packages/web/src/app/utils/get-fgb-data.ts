@@ -1,6 +1,6 @@
 import { geojson as flatgeobuf } from "flatgeobuf";
 import { getFlatGeobufRectangle } from "./get-fgb-rect";
-import { Map } from "maplibre-gl";
+import { GeoJSONFeature, Map } from "maplibre-gl";
 
 export async function getFgbData({
   map,
@@ -9,8 +9,10 @@ export async function getFgbData({
   map: Map;
   timestamp: Date;
 }) {
-  let i = 0;
-  const geojson = { type: "FeatureCollection", features: [] as any[] };
+  const geojson = {
+    type: "FeatureCollection",
+    features: [] as GeoJSONFeature[],
+  };
 
   const filename = `https://storage.googleapis.com/osm-tardis/${timestamp
     .toISOString()
@@ -19,9 +21,7 @@ export async function getFgbData({
   const iter = flatgeobuf.deserialize(
     filename,
     getFlatGeobufRectangle(map),
-  ) as AsyncGenerator<any>;
-
-  const timestamps = new Set();
+  ) as AsyncGenerator<GeoJSONFeature>;
 
   for await (const feature of iter) {
     const { properties } = feature;
@@ -36,11 +36,9 @@ export async function getFgbData({
         properties.changeType === "modifiedNew" ||
         properties.changeType === "deletedNew")
     ) {
-      geojson.features.push({ ...feature, id: i });
-      i += 1;
-      timestamps.add(properties.timestamp);
+      geojson.features = [...geojson.features, feature];
     }
   }
 
-  return { geojson, timestamps: Array.from(timestamps).sort() };
+  return { geojson };
 }
