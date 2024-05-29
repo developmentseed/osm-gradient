@@ -1,10 +1,11 @@
-import { useReducerAsync } from "use-reducer-async";
+import { AsyncActionHandlers, useReducerAsync } from "use-reducer-async";
 import logReducer from "./log.ts";
 import { calculateStats } from "../map/utils.ts";
 import tArea from "@turf/area";
 import tBboxPolygon from "@turf/bbox-polygon";
 import { getFgbData } from "../utils/get-fgb-data.ts";
 import { Map } from "maplibre-gl";
+import { Reducer } from "preact/hooks";
 
 const availableTimestamps = [
   `2024-05-19T05:00:00Z`,
@@ -34,12 +35,23 @@ export type AppReducer<State, Action> = (state: State, action: Action) => State;
 /* eslint-enable no-unused-vars */
 
 export interface AppState {
-  map: any;
+  map?: Map;
   mapStatus: MapStatus;
-  geojson?: any;
-  currentTimestamp?: Date;
-  currentTimestampGeojson?: any;
+  mapData: GeoJSON.FeatureCollection;
+  currentTimestamp: Date;
+  timestamps: string[];
 }
+
+const appInitialState: AppState = {
+  map: undefined,
+  mapStatus: MapStatus.IDLE,
+  mapData: {
+    type: "FeatureCollection",
+    features: [],
+  },
+  currentTimestamp: new Date(availableTimestamps[2]),
+  timestamps: [...availableTimestamps],
+};
 
 export type AppAction =
   | {
@@ -55,29 +67,14 @@ export type AppAction =
       };
     }
   | {
-      type: AppActionTypes.UPDATE_VIEW;
-    }
-  | {
       type: AppActionTypes.UPDATE_VIEW_START;
     }
   | {
       type: AppActionTypes.UPDATE_VIEW_SUCCESS;
       data: {
-        geojson: any;
-        timestamps: string[];
+        mapData: GeoJSON.FeatureCollection;
       };
     };
-
-export const appInitialState = {
-  map: undefined,
-  mapStatus: MapStatus.IDLE,
-  geojson: {
-    type: "FeatureCollection",
-    features: [],
-  },
-  currentTimestamp: new Date(availableTimestamps[2]),
-  timestamps: [...availableTimestamps],
-};
 
 function appReducer(state: AppState, action: AppAction) {
   switch (action.type) {
@@ -93,10 +90,14 @@ function appReducer(state: AppState, action: AppAction) {
         mapStatus: MapStatus.LOADING,
       };
     case AppActionTypes.UPDATE_VIEW_SUCCESS: {
-      const { geojson } = action.data;
+      if (!state.map) {
+        return { ...state };
+      }
+
+      const { mapData } = action.data;
       const { currentTimestamp } = state;
 
-      const stats = calculateStats(geojson);
+      const stats = calculateStats(mapData);
 
       const bounds = state.map.getBounds().toArray();
       const [[minX, minY], [maxX, maxY]] = bounds;
@@ -108,7 +109,7 @@ function appReducer(state: AppState, action: AppAction) {
         ...state,
         formattedArea,
         stats,
-        geojson,
+        mapData,
         currentTimestamp,
         currentTimestampGeojson: currentTimestamp,
         mapStatus: MapStatus.READY,
@@ -117,7 +118,7 @@ function appReducer(state: AppState, action: AppAction) {
     case AppActionTypes.SET_CURRENT_TIMESTAMP: {
       const { currentTimestamp } = action.data;
 
-      const currentTimestampGeojson = state.geojson;
+      const currentTimestampGeojson = state.mapData;
       const stats = calculateStats(currentTimestampGeojson);
       return {
         ...state,
@@ -132,15 +133,21 @@ function appReducer(state: AppState, action: AppAction) {
   }
 }
 
-const asyncActionHandlers: any = {
+type AsyncAction = {
+  type: AppActionTypes.UPDATE_VIEW;
+};
+
+const asyncActionHandlers: AsyncActionHandlers<
+  Reducer<AppState, AppAction>,
+  AsyncAction
+> = {
   [AppActionTypes.UPDATE_VIEW]:
-    ({ dispatch, getState }: any) =>
+    ({ dispatch, getState }) =>
     async () => {
       try {
         const { map, mapStatus, currentTimestamp } = getState();
 
-        // Only update the view if the map is ready
-        if (mapStatus !== MapStatus.READY) {
+        if (!map || mapStatus !== MapStatus.READY) {
           return;
         }
 
@@ -148,22 +155,21 @@ const asyncActionHandlers: any = {
           type: AppActionTypes.UPDATE_VIEW_START,
         });
 
-        const { geojson, timestamps } = await getFgbData({
+        const mapData = await getFgbData({
           map,
           timestamp: currentTimestamp,
         });
 
-        map.getSource("data").setData(geojson);
+        map.getSource("data").setData(mapData);
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_SUCCESS,
-          data: { geojson, timestamps },
+          data: { mapData },
         });
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.log(error);
-        alert(
-          "Unexpected error while loading the map, please see console log.",
-        );
+        alert("Unexpected error while loading the map.");
       }
     },
 };

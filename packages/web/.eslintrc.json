@@ -25,7 +25,7 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": "error",
     "jest/no-deprecated-functions": "off"
   }
 }

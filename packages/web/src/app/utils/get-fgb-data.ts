@@ -8,8 +8,8 @@ export async function getFgbData({
 }: {
   map: Map;
   timestamp: Date;
-}) {
-  const geojson = {
+}): Promise<GeoJSON.FeatureCollection> {
+  const geojson: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
     features: [] as GeoJSONFeature[],
   };
@@ -40,5 +40,5 @@ export async function getFgbData({
     }
   }
 
-  return { geojson };
+  return geojson;
 }
