@@ -1,6 +1,6 @@
 import { addHours, addDays, subDays, subHours } from "date-fns";
 import { AppActionTypes, AppDispatch, AppState } from "./reducer";
-import { ComponentChild } from "preact";
+import type { ComponentChildren } from "preact";
 
 function LoadingSkeleton() {
   return (
@@ -17,7 +17,7 @@ const TimeChangeButton = ({
 }: {
   dispatchAppState: AppDispatch;
   nextTimestamp: Date;
-  children: ComponentChild;
+  children: ComponentChildren;
 }) => (
   <button
     onClick={(e) => {

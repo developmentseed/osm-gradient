@@ -1,10 +1,8 @@
+import type { ComponentChildren } from "preact";
+
 interface LayoutProps {
-  children: any;
+  children: ComponentChildren;
 }
-export function Layout(props: LayoutProps){
-  return (
-    <div class="layout">
-      {props.children}
-    </div>
-  )
+export function Layout(props: LayoutProps) {
+  return <div class="layout">{props.children}</div>;
 }

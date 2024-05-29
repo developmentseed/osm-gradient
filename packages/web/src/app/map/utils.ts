@@ -1,4 +1,4 @@
-interface Stats {
+export interface Stats {
   tags: Record<string, number>;
   buildings: number;
   buildingsAdded: number;

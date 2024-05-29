@@ -1,5 +1,5 @@
 import { useEffect } from "preact/hooks";
-import MapLibreGL from "maplibre-gl";
+import MapLibreGL, { MapMouseEvent } from "maplibre-gl";
 import { AppActionTypes, AppDispatch, AppState } from "../reducer";
 
 interface MapProps {
@@ -9,7 +9,7 @@ interface MapProps {
 
 const MAP_OPTIONS = {
   center: [-74, 40.6973],
-  zoom: 8,
+  zoom: 10,
 } as {
   center: [number, number];
   zoom: number;
@@ -162,16 +162,27 @@ export function Map(props: MapProps) {
         },
       });
 
-      function onClick(e: any) {
-        const props = e.features[0].properties;
+      function onClick(e: MapMouseEvent) {
+        // @ts-expect-error - MapMouseEvent doesn't know about features
+        const features = e.features as GeoJSON.Feature[];
+
+        if (!features || features.length === 0) {
+          return;
+        }
+        const { properties } = features[0];
+
+        if (!properties) {
+          return;
+        }
+
         let tags = "";
-        const tagObject = JSON.parse(props.tags);
+        const tagObject = JSON.parse(properties.tags);
         for (const [key, value] of Object.entries(tagObject)) {
           tags = tags + "<dt>" + key + "=" + value + "</dt>";
         }
-        const html = `<dl><dt><b>action:</b> ${props.action}</dt>
-        <dt><b>id:</b> ${props.id}</dt>
-        <dt><b>user:</b> ${props.user}<dt>
+        const html = `<dl><dt><b>action:</b> ${properties.action}</dt>
+        <dt><b>id:</b> ${properties.id}</dt>
+        <dt><b>user:</b> ${properties.user}<dt>
         <br />
         ${tags}
         </dl>`;

@@ -1,11 +1,13 @@
-import { AsyncActionHandlers, useReducerAsync } from "use-reducer-async";
+import { useReducerAsync } from "use-reducer-async";
+// eslint-disable-next-line no-duplicate-imports
+import type { AsyncActionHandlers } from "use-reducer-async";
 import logReducer from "./log.ts";
 import { calculateStats } from "../map/utils.ts";
 import tArea from "@turf/area";
 import tBboxPolygon from "@turf/bbox-polygon";
 import { getFgbData } from "../utils/get-fgb-data.ts";
 import { Map } from "maplibre-gl";
-import { Dispatch, Reducer } from "preact/hooks";
+import type { Dispatch, Reducer } from "preact/hooks";
 
 const availableTimestamps = [
   `2024-05-19T05:00:00Z`,
