@@ -5,7 +5,7 @@ import tArea from "@turf/area";
 import tBboxPolygon from "@turf/bbox-polygon";
 import { getFgbData } from "../utils/get-fgb-data.ts";
 import { Map } from "maplibre-gl";
-import { Reducer } from "preact/hooks";
+import { Dispatch, Reducer } from "preact/hooks";
 
 const availableTimestamps = [
   `2024-05-19T05:00:00Z`,
@@ -73,8 +73,12 @@ export type AppAction =
       type: AppActionTypes.UPDATE_VIEW_SUCCESS;
       data: {
         mapData: GeoJSON.FeatureCollection;
+        currentTimestamp: Date;
       };
-    };
+    }
+  | AsyncAction;
+
+export type AppDispatch = Dispatch<AppAction>;
 
 function appReducer(state: AppState, action: AppAction) {
   switch (action.type) {
@@ -94,8 +98,7 @@ function appReducer(state: AppState, action: AppAction) {
         return { ...state };
       }
 
-      const { mapData } = action.data;
-      const { currentTimestamp } = state;
+      const { mapData, currentTimestamp } = action.data;
 
       const stats = calculateStats(mapData);
 
@@ -135,6 +138,9 @@ function appReducer(state: AppState, action: AppAction) {
 
 type AsyncAction = {
   type: AppActionTypes.UPDATE_VIEW;
+  data: {
+    currentTimestamp: Date;
+  };
 };
 
 const asyncActionHandlers: AsyncActionHandlers<
@@ -143,9 +149,14 @@ const asyncActionHandlers: AsyncActionHandlers<
 > = {
   [AppActionTypes.UPDATE_VIEW]:
     ({ dispatch, getState }) =>
-    async () => {
+    async (action) => {
       try {
-        const { map, mapStatus, currentTimestamp } = getState();
+        const state = getState();
+
+        const { map, mapStatus } = state;
+
+        const currentTimestamp =
+          action?.data?.currentTimestamp || state.currentTimestamp;
 
         if (!map || mapStatus !== MapStatus.READY) {
           return;
@@ -164,7 +175,7 @@ const asyncActionHandlers: AsyncActionHandlers<
 
         dispatch({
           type: AppActionTypes.UPDATE_VIEW_SUCCESS,
-          data: { mapData },
+          data: { mapData, currentTimestamp },
         });
       } catch (error) {
         // eslint-disable-next-line no-console

@@ -210,11 +210,5 @@ export function Map(props: MapProps) {
     });
   }, [appState?.map]);
 
-  useEffect(() => {
-    if (appState && appState.map && appState.currentTimestampGeojson) {
-      appState.map.getSource("data").setData(appState.currentTimestampGeojson);
-    }
-  }, [appState?.map, appState?.currentTimestampGeojson]);
-
   return <div id="map" />;
 }
