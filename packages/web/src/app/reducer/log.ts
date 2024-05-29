@@ -1,6 +1,7 @@
+import type { Reducer } from "preact/hooks";
 import { AppAction, AppState } from ".";
 
-export default function logReducer(reducer: any) {
+export default function logReducer(reducer: Reducer<AppState, AppAction>) {
   /* eslint-disable no-console */
   return (state: AppState, action: AppAction) => {
     const nextState = reducer(state, action);
@@ -13,7 +14,7 @@ export default function logReducer(reducer: any) {
       "%c%s",
       "color: green; font-weight: bold",
       "next state ",
-      nextState
+      nextState,
     );
     console.groupEnd();
 

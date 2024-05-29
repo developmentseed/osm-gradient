@@ -1,7 +1,8 @@
 import { useState } from "preact/hooks";
+import type { Stats } from "./map/utils";
 
 interface StatsProps {
-  stats: any;
+  stats: Stats;
   loading: boolean;
   currentTimestamp?: string;
 }
@@ -108,8 +109,9 @@ export function Stats(props: StatsProps) {
       </article>
     );
   }
-  const sortedUsers: any[] = [];
-  const sortedTags: any[] = [];
+
+  const sortedUsers: [string, number][] = [];
+  const sortedTags: [string, number][] = [];
   Object.keys(stats.users).forEach((user) => {
     sortedUsers.push([user, stats.users[user]]);
   });

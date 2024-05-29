@@ -1,54 +1,21 @@
-import { geojson as flatgeobuf } from "flatgeobuf";
-
-export function fbgBbox(map: any) {
-  const { lng, lat } = map.getCenter();
-  const { _sw, _ne } = map.getBounds();
-  const distanceX =
-    Math.min(Math.abs(_sw.lng - lng), Math.abs(_ne.lng - lng)) * 0.9;
-  const distanceY =
-    Math.min(Math.abs(_sw.lat - lat), Math.abs(_ne.lat - lat)) * 0.9;
-  return {
-    minX: lng - distanceX,
-    minY: lat - distanceY,
-    maxX: lng + distanceX,
-    maxY: lat + distanceY,
-  };
+export interface Stats {
+  tags: Record<string, number>;
+  buildings: number;
+  buildingsAdded: number;
+  buildingsModified: number;
+  buildingsDeleted: number;
+  highways: number;
+  highwaysAdded: number;
+  highwaysModified: number;
+  highwaysDeleted: number;
+  other: number;
+  otherAdded: number;
+  otherModified: number;
+  otherDeleted: number;
+  users: Record<string, number>;
 }
 
-export async function getFgbData(map: any) {
-  let i = 0;
-  const geojson = { type: "FeatureCollection", features: [] as any[] };
-
-  const iter = flatgeobuf.deserialize(
-    "https://storage.googleapis.com/osm-tardis/2013-02-03T15%3A00.fgb",
-    fbgBbox(map),
-  ) as AsyncGenerator<any>;
-
-  const timestamps = new Set();
-
-  for await (const feature of iter) {
-    const { properties } = feature;
-
-    if (!properties || properties === null || properties === undefined) {
-      continue;
-    }
-
-    if (
-      properties.type !== "relation" &&
-      (properties.changeType === "added" ||
-        properties.changeType === "modifiedNew" ||
-        properties.changeType === "deletedNew")
-    ) {
-      geojson.features.push({ ...feature, id: i });
-      i += 1;
-      timestamps.add(properties.timestamp);
-    }
-  }
-
-  return { geojson, timestamps: Array.from(timestamps).sort() };
-}
-
-export function calculateStats(geojson: any) {
+export function calculateStats(geojson: GeoJSON.FeatureCollection) {
   const stats = {
     tags: {},
     buildings: 0,
@@ -64,9 +31,13 @@ export function calculateStats(geojson: any) {
     otherModified: 0,
     otherDeleted: 0,
     users: {},
-  };
+  } as Stats;
 
   for (const feature of geojson.features) {
+    if (!feature.properties) {
+      continue;
+    }
+
     const changeType = feature.properties.changeType;
     if (
       changeType === "added" ||

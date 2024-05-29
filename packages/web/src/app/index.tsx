@@ -5,7 +5,7 @@ import { Map } from "./map";
 import { Panel } from "./panel";
 import { MapStatus, useAppReducer } from "./reducer";
 import { Stats } from "./stats";
-import { CartoSlider } from "./cartoslider";
+import TimeNavigator from "./time-navigator";
 
 export function App() {
   const [appState, dispatchAppState] = useAppReducer();
@@ -27,7 +27,7 @@ export function App() {
       </Panel>
       <main class="carto">
         <Map appState={appState} dispatchAppState={dispatchAppState} />
-        <CartoSlider
+        <TimeNavigator
           currentTimestamp={currentTimestamp}
           isLoading={isLoading}
           timestamps={timestamps}

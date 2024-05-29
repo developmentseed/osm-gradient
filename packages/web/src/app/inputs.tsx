@@ -14,13 +14,6 @@ export function PanelInputs(props: PanelInputsProps) {
           Currently selected: <strong>{formattedArea || "-"} km&sup2;</strong>
         </p>
       </section>
-      <section>
-        <h3>Time Period</h3>
-        <p>
-          <small>Select one hour from: </small>
-        </p>
-        <input type="date" />
-      </section>
     </article>
   );
 }
