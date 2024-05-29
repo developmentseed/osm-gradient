@@ -1,14 +1,14 @@
 import { useEffect } from "preact/hooks";
 import MapLibreGL from "maplibre-gl";
-import { AppActionTypes, AppState } from "../reducer";
+import { AppActionTypes, AppDispatch, AppState } from "../reducer";
 
 interface MapProps {
   appState: AppState;
-  dispatchAppState: any;
+  dispatchAppState: AppDispatch;
 }
 
 const MAP_OPTIONS = {
-  center: [-74.5087291, 40.28],
+  center: [-74, 40.6973],
   zoom: 8,
 } as {
   center: [number, number];

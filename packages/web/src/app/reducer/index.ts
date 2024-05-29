@@ -138,7 +138,7 @@ function appReducer(state: AppState, action: AppAction) {
 
 type AsyncAction = {
   type: AppActionTypes.UPDATE_VIEW;
-  data: {
+  data?: {
     currentTimestamp: Date;
   };
 };
