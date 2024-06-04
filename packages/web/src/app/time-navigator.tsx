@@ -62,13 +62,13 @@ function TimeNavigator({
           </p>
           <TimeChangeButton
             dispatchAppState={dispatchAppState}
-            nextTimestamp={subDays(currentTimestamp, -1)}
+            nextTimestamp={subDays(currentTimestamp, 1)}
           >
             ← Day
           </TimeChangeButton>
           <TimeChangeButton
             dispatchAppState={dispatchAppState}
-            nextTimestamp={subHours(currentTimestamp, -1)}
+            nextTimestamp={subHours(currentTimestamp, 1)}
           >
             ← Hour
           </TimeChangeButton>
