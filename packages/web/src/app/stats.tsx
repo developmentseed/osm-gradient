@@ -132,9 +132,7 @@ export function Stats(props: StatsProps) {
         <h2>Results</h2>
         <p>
           {currentTimestamp ? (
-            <small>
-              As of {new Date(currentTimestamp).toLocaleTimeString()}
-            </small>
+            <small>As of {new Date(currentTimestamp).toUTCString()}</small>
           ) : (
             "-"
           )}
