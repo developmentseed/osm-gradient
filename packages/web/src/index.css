@@ -49,6 +49,27 @@ body {
   color: var(--base);
   background: var(--bg-dark);
 }
+button {
+  border: none;
+  outline: none;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  text-decoration: none;
+  background: var(--base);
+  color: var(--base-light);
+  font-family: var(--font-family);
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+button:disabled {
+  background: var(--bg-dark);
+  border: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
 .layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -84,10 +105,11 @@ body {
   color: var(--base-light);
 }
 .carto__slider--wrapper {
-  display: flex;
-  flex-flow: column nowrap;
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
   padding: 1rem;
-  padding-bottom: 2rem;
 }
 #map {
   min-height: 480px;
@@ -122,7 +144,6 @@ body {
     0px 0px 12rem 0px rgba(0, 0, 0, 0.8) inset;
   border-radius: 0.5rem;
   position: relative;
-  top: -1rem;
   height: calc(100% + 1rem);
   z-index: 100;
 }
@@ -143,7 +164,14 @@ body {
   margin-top: -1rem;
   color: transparent;
   margin-bottom: 1rem;
+  transition: all 0.32s ease-in-out;
+  cursor: pointer;
 }
+.panel__dragger:hover {
+  background: var(--base-light);  
+  box-shadow: 0 6px 6px -2px var(--bg-light);
+}
+
 .panel h2,
 .panel h3 {
   text-transform: uppercase;
@@ -242,21 +270,21 @@ li.bar-chart__bar {
   white-space: pre;
 }
 
-.carto__slider {
-  height: 1rem;
-  flex: 1;
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-}
 .carto__slider--heading h4 {
   text-transform: uppercase;
 }
-.carto__slider--tools {
-  padding-right: 1rem;
-}
-.carto__slider--tools p {
+.carto__slider--heading p {
   font-size: 0.875rem;
+  line-height: 1rem;
+}
+.carto__slider--tools {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+.carto__slider--loading {
+  opacity: 0.8;
 }
 
 .loading {
@@ -286,15 +314,6 @@ li.bar-chart__bar {
 .loading:first-child:after {
   left:0;
 }
-.tr--button {
-  text-align: center;
-  font-weight: bold;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-.tr--button:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-}
 @keyframes skeleton-loading {
   to {
       background-position:
@@ -311,9 +330,13 @@ li.bar-chart__bar {
     height: calc(100vh - 3.5rem);
   }
   .carto__slider--wrapper {
-    display: flex;
-    flex-flow: column nowrap;
-    padding-bottom: 1rem;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 10rem 1fr;
+    grid-template-rows: 1fr;
+  }
+  .carto__slider--heading {
+    height: 4rem;
   }
   .carto #map {
     flex: 8;
@@ -329,13 +352,47 @@ li.bar-chart__bar {
 }
 
 /* Timeline Slider */
-.carto--slider {
-  width: 100%;
-  max-width: 100%;
-  height: 1rem;
-  flex: 2;
+.tr--button,
+.carto__slider--button {
+  border-radius: 0.25rem;
+  border: 2px solid var(--base);
+  background-image: linear-gradient(
+    125deg,
+    var(--base) 0%,
+    var(--bg-dark) 51%,
+    var(--base) 100%
+  );
+  cursor: pointer;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.24s ease-out;
+  flex: 1;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  box-shadow:
+    0 2px 6px 0 rgba(68, 63, 63, 0.16),
+    0 6px 6px -2px rgba(120, 120, 120, 0.125);
+  background-size: 250% auto;
 }
-
+.carto__slider--button svg {
+  height: 16px;
+  width: 16px;
+}
+.tr--button:hover,
+.carto__slider--button:hover {
+  background-position: right center;
+  color: #fff;
+  box-shadow:
+    0 2px 6px 0 rgba(68, 63, 63, 0.32),
+    0 6px 6px -2px rgba(0, 0, 0, 0.5);
+}
+.tr--button {
+  display: table-cell;
+}
 .slider--thumb {
   background-color: var(--bg-light);
   cursor: pointer;
