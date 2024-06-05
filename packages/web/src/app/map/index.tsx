@@ -42,7 +42,7 @@ export function Map(props: MapProps) {
             type: "raster",
             tileSize: 256,
             tiles: [
-              `https://api.mapbox.com/styles/v1/ingalls/ckvh0wwm8g2cw15r05ozt0ybr/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJjbG03b3NudWEwMnlmM2RzMjlhdjNrZzFmIn0.DKX63r8pJPPTqSxrV_y58Q`,
+              `https://api.mapbox.com/styles/v1/devseed/clx24j0bx02c001qm355b7gw4/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q`,
             ],
           },
         },
@@ -59,7 +59,7 @@ export function Map(props: MapProps) {
             type: "raster",
             source: "basemap",
             minzoom: 0,
-            maxzoom: 15,
+            maxzoom: 22,
           },
         ],
       },
