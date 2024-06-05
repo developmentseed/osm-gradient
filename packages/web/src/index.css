@@ -158,7 +158,14 @@ button {
   margin-top: -1rem;
   color: transparent;
   margin-bottom: 1rem;
+  transition: all 0.32s ease-in-out;
+  cursor: pointer;
 }
+.panel__dragger:hover {
+  background: var(--base-light);  
+  box-shadow: 0 6px 6px -2px var(--bg-light);
+}
+
 .panel h2,
 .panel h3 {
   text-transform: uppercase;
@@ -301,15 +308,6 @@ li.bar-chart__bar {
 .loading:first-child:after {
   left:0;
 }
-.tr--button {
-  text-align: center;
-  font-weight: bold;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-.tr--button:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-}
 @keyframes skeleton-loading {
   to {
       background-position:
@@ -348,12 +346,19 @@ li.bar-chart__bar {
 }
 
 /* Timeline Slider */
+.tr--button,
 .carto__slider--button {
   border-radius: 0.25rem;
   border: 2px solid var(--base);
-  background-image: linear-gradient(125deg, var(--base) 0%, var(--bg-dark) 51%,  var(--base) 100%);
+  background-image: linear-gradient(
+    125deg,
+    var(--base) 0%,
+    var(--bg-dark) 51%,
+    var(--base) 100%
+  );
   cursor: pointer;
   display: flex;
+  text-align: center;
   align-items: center;
   justify-content: center;
   transition: all 0.24s ease-out;
@@ -362,18 +367,26 @@ li.bar-chart__bar {
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-weight: 600;
-  box-shadow:  0 2px 6px 0 rgba(68,63,63,0.16);
+  box-shadow:
+    0 2px 6px 0 rgba(68, 63, 63, 0.16),
+    0 6px 6px -2px rgba(120, 120, 120, 0.125);
   background-size: 250% auto;
 }
 .carto__slider--button svg {
   height: 16px;
   width: 16px;
 }
+.tr--button:hover,
 .carto__slider--button:hover {
   background-position: right center;
   color: #fff;
+  box-shadow:
+    0 2px 6px 0 rgba(68, 63, 63, 0.32),
+    0 6px 6px -2px rgba(0, 0, 0, 0.5);
 }
-
+.tr--button {
+  display: table-cell;
+}
 .slider--thumb {
   background-color: var(--bg-light);
   cursor: pointer;
