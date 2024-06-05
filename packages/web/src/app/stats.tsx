@@ -45,9 +45,9 @@ export function Stats(props: StatsProps) {
             <thead>
               <tr>
                 <th>Feature</th>
-                <th>Added</th>
-                <th>Modified</th>
-                <th>Deleted</th>
+                <th><span class="feature--label feature--label__add">Added</span></th>
+                <th><span class="feature--label feature--label__mod">Modified</span></th>
+                <th><span class="feature--label feature--label__del">Deleted</span></th>
               </tr>
             </thead>
             <tbody>
@@ -145,19 +145,19 @@ export function Stats(props: StatsProps) {
             <span class="bar-chart__bar--label">Buildings</span>
             <div class="bar-chart__bar--value">
               <span
-                class="bar-chart__bar--val1"
+                class="bar-chart__bar--add"
                 style={`flex-basis: ${
                   (stats.buildingsAdded / stats.buildings) * 100
                 }%`}
               />
               <span
-                class="bar-chart__bar--val2"
+                class="bar-chart__bar--mod"
                 style={`flex-basis: ${
                   (stats.buildingsModified / stats.buildings) * 100
                 }%`}
               />
               <span
-                class="bar-chart__bar--val3"
+                class="bar-chart__bar--del"
                 style={`flex-basis: ${
                   (stats.buildingsDeleted / stats.buildings) * 100
                 }%`}
@@ -168,19 +168,19 @@ export function Stats(props: StatsProps) {
             <span class="bar-chart__bar--label">Highways</span>
             <div class="bar-chart__bar--value">
               <span
-                class="bar-chart__bar--val1"
+                class="bar-chart__bar--add"
                 style={`flex-basis: ${
                   (stats.highwaysAdded / stats.highways) * 100
                 }%`}
               />
               <span
-                class="bar-chart__bar--val2"
+                class="bar-chart__bar--mod"
                 style={`flex-basis: ${
                   (stats.highwaysModified / stats.highways) * 100
                 }%`}
               />
               <span
-                class="bar-chart__bar--val3"
+                class="bar-chart__bar--del"
                 style={`flex-basis: ${
                   (stats.highwaysDeleted / stats.highways) * 100
                 }%`}
@@ -191,17 +191,17 @@ export function Stats(props: StatsProps) {
             <span class="bar-chart__bar--label">Other</span>
             <div class="bar-chart__bar--value">
               <span
-                class="bar-chart__bar--val1"
+                class="bar-chart__bar--add"
                 style={`flex-basis: ${(stats.otherAdded / stats.other) * 100}%`}
               />
               <span
-                class="bar-chart__bar--val2"
+                class="bar-chart__bar--mod"
                 style={`flex-basis: ${
                   (stats.otherModified / stats.other) * 100
                 }%`}
               />
               <span
-                class="bar-chart__bar--val3"
+                class="bar-chart__bar--del"
                 style={`flex-basis: ${
                   (stats.otherDeleted / stats.other) * 100
                 }%`}
@@ -213,9 +213,9 @@ export function Stats(props: StatsProps) {
           <thead>
             <tr>
               <th>Feature</th>
-              <th>Added</th>
-              <th>Modified</th>
-              <th>Deleted</th>
+              <th><span class="feature--label feature--label__add">Added</span></th>
+              <th><span class="feature--label feature--label__mod">Modified</span></th>
+              <th><span class="feature--label feature--label__del">Deleted</span></th>
             </tr>
           </thead>
           <tbody>

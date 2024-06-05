@@ -36,6 +36,10 @@ p, h1, h2, h3, h4, h5, h6 {
   --base-light: #f4f4f4;
   --bg-dark: #051730;
   --bg-light: #eae9ee;
+
+  --color-success: #8CF8A3;
+  --color-info: #619EFF;
+  --color-danger: #FF7A7A;
   --font-family: 'DM Sans', Helvetica, Arial, sans-serif;
 }
 
@@ -232,14 +236,14 @@ li.bar-chart__bar {
   width: 100%;
   box-shadow: inset 0 0 1px 1px rgba(222,222,222,0.25)
 }
-.bar-chart__bar--val1 {
-  background: #8CF8A3;
+.bar-chart__bar--add {
+  background: var(--color-success);
 }
-.bar-chart__bar--val2 {
-  background: #619EFF;
+.bar-chart__bar--mod {
+  background: var(--color-info)
 }
-.bar-chart__bar--val3 {
-  background:#FF7A7A;
+.bar-chart__bar--del {
+  background: var(--color-danger);
 }
 .stats table th {
   text-transform: uppercase;
@@ -247,6 +251,15 @@ li.bar-chart__bar {
   letter-spacing: 1px;
   text-align: left;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+.feature--label__add{
+  color: var(--color-success);
+}
+.feature--label__mod{
+  color: var(--color-info);
+}
+.feature--label__del{
+  color: var(--color-danger);
 }
 
 .stats table th:not(:first-child),
