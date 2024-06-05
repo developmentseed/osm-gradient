@@ -34,9 +34,11 @@ export function Header() {
             </svg>
           </button>
         </div>
-        Visualize OpenStreetMap features created, modified or deleted every hour
-        using change data prepared by OSMCha as a FlatGeobuf. This visualization
-        does not use a server.
+        <small>
+          Visualize OpenStreetMap features created, modified or deleted every hour
+          using change data prepared by OSMCha as a FlatGeobuf. This visualization
+          does not use a server.
+        </small>
       </dialog>
       <button
         class="dialog__open-button"
