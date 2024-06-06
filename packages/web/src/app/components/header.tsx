@@ -38,6 +38,14 @@ export function Header() {
           Visualize OpenStreetMap features created, modified or deleted every hour
           using change data prepared by OSMCha as a FlatGeobuf. This visualization
           does not use a server.
+          <br/><br/>
+          <a
+            href="https://github.com/developmentseed/osm-gradient"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            GitHub
+          </a>
         </small>
       </dialog>
       <button
