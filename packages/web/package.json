@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "vite build && surge dist gradient.osmcha.org",
+    "deploy": "vite build && surge dist",
     "lint": "eslint . --ext .js,.ts,.tsx"
   },
   "dependencies": {
