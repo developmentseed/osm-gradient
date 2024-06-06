@@ -47,7 +47,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Build
-        run: vite build
+        run: npx vite build
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - name: Deploy to S3
