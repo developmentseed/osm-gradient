@@ -1,0 +1,41 @@
+name: Surge PR Preview
+
+on: [pull_request]
+
+env:
+  NODE: 18
+  WORKING_DIRECTORY: packages/web
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # allow surge-preview to create/update PR comments
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ env.NODE }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE }}
+          cache: "yarn"
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/yarn.lock
+
+      - name: Install Dependencies
+        run: yarn install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Lint
+        run: yarn lint
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - uses: afc163/surge-preview@v1
+        id: preview_step
+        with:
+          surge_token: ${{ secrets.SURGE_TOKEN }}
+          dist: dist
+          build: |
+            vite build
+      - name: Get the preview_url
+        run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"

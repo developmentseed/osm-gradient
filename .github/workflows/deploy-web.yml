@@ -37,8 +37,16 @@ jobs:
         run: yarn lint
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      - name: Deploy to surge
-        run: yarn deploy
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::003081160852:role/osm-gradient-deploy-s3-role
+          aws-region: us-east-1
+
+      - name: Build
+        run: vite build
         working-directory: ${{ env.WORKING_DIRECTORY }}
-        env:
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+
+      - name: Deploy to S3
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: aws s3 sync ./dist s3://gradient.osmcha.org --delete
