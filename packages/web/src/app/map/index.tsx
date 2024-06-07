@@ -1,6 +1,8 @@
 import { useEffect } from "preact/hooks";
 import MapLibreGL, { MapMouseEvent } from "maplibre-gl";
 import { AppActionTypes, AppDispatch, AppState } from "../reducer";
+import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
 interface MapProps {
   appState: AppState;
@@ -161,6 +163,45 @@ export function Map(props: MapProps) {
           "circle-opacity": 0,
         },
       });
+
+      const geocoderApi = {
+        forwardGeocode: async (config: { query: string }) => {
+          const features = [];
+          try {
+            const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geojson=1&addressdetails=1`;
+            const response = await fetch(request);
+            const geojson = await response.json();
+            for (const feature of geojson.features) {
+              const center = [
+                feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
+                feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
+              ];
+              const point = {
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: center,
+                },
+                place_name: feature.properties.display_name,
+                properties: feature.properties,
+                text: feature.properties.display_name,
+                place_type: ["place"],
+                center,
+              };
+              features.push(point);
+            }
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to forwardGeocode with error: ${e}`);
+          }
+
+          return {
+            features,
+          };
+        },
+      };
+
+      map.addControl(new MaplibreGeocoder(geocoderApi, { zoom: 10 }));
 
       function onClick(e: MapMouseEvent) {
         // @ts-expect-error - MapMouseEvent doesn't know about features
