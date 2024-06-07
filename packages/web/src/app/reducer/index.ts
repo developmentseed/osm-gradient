@@ -238,7 +238,8 @@ export const useAppReducer = () => {
     if (state.map && state.initialView) {
       const { lng, lat, zoom } = state.initialView;
       if (lng !== undefined && lat !== undefined && zoom !== undefined) {
-        state.map.setView([lat, lng], zoom);
+        state.map.setCenter([lng, lat]);
+        state.map.setZoom(zoom);
       }
     }
   }, [state.initialView, state.map]);
