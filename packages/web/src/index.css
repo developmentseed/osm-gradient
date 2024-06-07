@@ -493,13 +493,15 @@ li.bar-chart__bar {
 .maplibregl-ctrl-geocoder--input::placeholder,
 .maplibregl-ctrl-geocoder .suggestions,
 .maplibregl-ctrl-geocoder--button,
+.maplibre-gl-geocoder--error,
 .maplibregl-ctrl-geocoder .suggestions > li > a {
   background: var(--base);
   color: var(--base-light);
 }
 .mapboxgl-ctrl-geocoder--result-icon,
 .mapboxgl-ctrl-geocoder--result-icon path,
-.maplibregl-ctrl-geocoder--icon {
+.maplibregl-ctrl-geocoder--icon,
+.maplibregl-ctrl-geocoder--icon-loading path {
   fill: var(--base-light);
 }
 .maplibregl-ctrl-geocoder .suggestions > li > a:hover,
