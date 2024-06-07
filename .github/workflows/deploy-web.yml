@@ -53,3 +53,8 @@ jobs:
       - name: Deploy to S3
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: aws s3 sync ./dist s3://gradient.osmcha.org --delete
+
+      - name: Invalidate CloudFront Cache
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          aws cloudfront create-invalidation --distribution-id E3I6NYCQVXFMCK --paths "/*"
