@@ -7,6 +7,9 @@ import tArea from "@turf/area";
 import tBboxPolygon from "@turf/bbox-polygon";
 import { getFgbData } from "../utils/get-fgb-data.ts";
 import { Map } from "maplibre-gl";
+import { useEffect } from "preact/hooks";
+
+// eslint-disable-next-line no-duplicate-imports
 import type { Dispatch, Reducer } from "preact/hooks";
 
 const availableTimestamps = [
@@ -33,6 +36,15 @@ export enum AppActionTypes {
   UPDATE_VIEW_ERROR = "UPDATE_VIEW_ERROR",
 }
 
+// Utility function to update URL params
+const updateURLParams = (params: Record<string, string | number | boolean>) => {
+  const url = new URL(window.location.href);
+  Object.keys(params).forEach((key) =>
+    url.searchParams.set(key, String(params[key])),
+  );
+  window.history.pushState({}, "", url.href);
+};
+
 export type AppReducer<State, Action> = (state: State, action: Action) => State;
 /* eslint-enable no-unused-vars */
 
@@ -44,16 +56,34 @@ export interface AppState {
   timestamps: string[];
 }
 
-const appInitialState: AppState = {
-  map: undefined,
-  mapStatus: MapStatus.IDLE,
-  mapData: {
-    type: "FeatureCollection",
-    features: [],
-  },
-  currentTimestamp: new Date(availableTimestamps[2]),
-  timestamps: [...availableTimestamps],
+const getInitialStateFromURL = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const lng = urlParams.get("lng");
+  const lat = urlParams.get("lat");
+  const zoom = urlParams.get("zoom");
+  const timestamp = urlParams.get("timestamp");
+
+  return {
+    map: undefined,
+    mapStatus: MapStatus.IDLE,
+    mapData: {
+      type: "FeatureCollection" as const,
+      features: [],
+    },
+    currentTimestamp: timestamp
+      ? new Date(timestamp)
+      : new Date(availableTimestamps[2]),
+    timestamps: [...availableTimestamps],
+    initialView: {
+      lng: lng ? parseFloat(lng) : undefined,
+      lat: lat ? parseFloat(lat) : undefined,
+      zoom: zoom ? parseFloat(zoom) : undefined,
+    },
+  };
 };
+
+const appInitialState: AppState = getInitialStateFromURL();
 
 export type AppAction =
   | {
@@ -109,6 +139,16 @@ function appReducer(state: AppState, action: AppAction) {
       const poly = tBboxPolygon([minX, minY, maxX, maxY]);
       const area = tArea(poly);
       const formattedArea = new Intl.NumberFormat().format(area / 1e6);
+
+      // Update URL params
+      const center = state.map.getCenter();
+      const zoom = state.map.getZoom();
+      updateURLParams({
+        lng: center.lng,
+        lat: center.lat,
+        zoom,
+        timestamp: currentTimestamp.toISOString(),
+      });
 
       return {
         ...state,
@@ -188,9 +228,20 @@ const asyncActionHandlers: AsyncActionHandlers<
 };
 
 export const useAppReducer = () => {
-  return useReducerAsync(
+  const [state, dispatch] = useReducerAsync(
     logReducer(appReducer),
     appInitialState,
     asyncActionHandlers,
   );
+
+  useEffect(() => {
+    if (state.map && state.initialView) {
+      const { lng, lat, zoom } = state.initialView;
+      if (lng !== undefined && lat !== undefined && zoom !== undefined) {
+        state.map.setView([lat, lng], zoom);
+      }
+    }
+  }, [state.initialView, state.map]);
+
+  return [state, dispatch];
 };
