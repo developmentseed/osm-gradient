@@ -1,17 +1,32 @@
-name: Surge PR Preview
+# credit @geohacker for the original script
+name: Preview Deployment
 
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 env:
   NODE: 18
   WORKING_DIRECTORY: packages/web
+  COMMENT_MARKER: "Preview deployed to S3!"
+  BUCKET_NAME: osm-gradient-pr-${{ github.event.number }}
+  AWS_REGION: us-east-1
 
 jobs:
-  preview:
+  build:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # allow surge-preview to create/update PR comments
+      id-token: write
+      contents: read
+      issues: write
+      pull-requests: write
+
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -30,12 +45,97 @@ jobs:
         run: yarn lint
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      - uses: afc163/surge-preview@v1
-        id: preview_step
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          surge_token: ${{ secrets.SURGE_TOKEN }}
-          dist: dist
-          build: |
-            vite build
-      - name: Get the preview_url
-        run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"
+          role-to-assume: arn:aws:iam::003081160852:role/osm-gradient-deploy-s3-role
+          aws-region: us-east-1
+
+      - name: Build
+        run: npx vite build
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Check if bucket exists
+        id: check_bucket
+        run: |
+          if aws s3 ls "s3://${{ env.BUCKET_NAME }}" 2>&1 | grep -q 'NoSuchBucket'; then
+            echo "Bucket does not exist."
+            echo "::set-output name=exists::false"
+          else
+            echo "Bucket exists."
+            echo "::set-output name=exists::true"
+          fi
+
+      - name: Create S3 bucket
+        if: steps.check_bucket.outputs.exists == 'false'
+        run: |
+          aws s3 mb s3://${{ env.BUCKET_NAME }}
+
+      - name: Deploy to S3 (Preview)
+        if: github.event.action != 'closed'
+        run: |
+          aws s3 sync ./dist s3://$BUCKET_NAME --delete
+          aws s3 website s3://$BUCKET_NAME --index-document index.html --error-document index.html
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Make bucket public access
+        if: steps.check_bucket.outputs.exists == 'false'
+        run: |
+          aws s3api delete-public-access-block --bucket ${{ env.BUCKET_NAME }}
+
+      - name: Add bucket policy for public access
+        if: steps.check_bucket.outputs.exists == 'false'
+        run: |
+          echo '{
+            "Version": "2012-10-17",
+            "Statement": [{
+              "Sid": "PublicReadGetObject",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": "s3:GetObject",
+              "Resource": "arn:aws:s3:::${{ env.BUCKET_NAME }}/*"
+            }]
+          }' > bucket-policy.json
+          aws s3api put-bucket-policy --bucket ${{ env.BUCKET_NAME }} --policy file://bucket-policy.json
+
+      - name: Check for existing preview comment
+        id: check_comment
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+            });
+            const existingComment = comments.data.find(comment => comment.body.includes('${{ env.COMMENT_MARKER }}'));
+            if (existingComment) {
+              console.log('Deployment comment already exists:', existingComment.html_url);
+              core.setOutput('should_post_comment', 'false');
+              return existingComment.html_url;
+            } else {
+              core.setOutput('should_post_comment', 'true');
+              return '';
+            }
+
+      - name: Post comment with preview URL
+        if: steps.check_comment.outputs.should_post_comment == 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const websiteUrl = `http://${{ env.BUCKET_NAME }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com/`;
+            const pullRequestNumber = context.payload.pull_request.number;
+            const message = `✨ Preview deployed to S3! Visit ${websiteUrl}`;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pullRequestNumber,
+              body: message
+            });
+
+      - name: Cleanup S3 Bucket
+        if: github.event.action == 'closed'
+        run: |
+          aws s3 rb s3://$BUCKET_NAME --force
