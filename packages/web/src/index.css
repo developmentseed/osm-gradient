@@ -505,6 +505,7 @@ li.bar-chart__bar {
   fill: var(--base-light);
 }
 .maplibregl-ctrl-geocoder .suggestions > li > a:hover,
+.maplibregl-ctrl-geocoder .suggestions > .active > a,
 .maplibregl-ctrl-geocoder .suggestions > li > a:hover .mapboxgl-ctrl-geocoder--result-icon path {
   background: var(--bg-dark);
   color: var(--base-light);
