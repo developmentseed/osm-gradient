@@ -8,6 +8,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@osmcha/osm-adiff-parser": "^3.1.0",
     "axios": "^1.5.0",
     "commander": "12.0.0",
     "real-changesets-parser": "https://github.com/developmentseed/real-changesets-parser.git",

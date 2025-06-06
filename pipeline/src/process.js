@@ -1,4 +1,5 @@
 const axios = require('axios');
+const adiffParser = require("@osmcha/osm-adiff-parser");
 const changesetParser = require("real-changesets-parser");
 const fs = require('fs');
 const readline = require('readline');
@@ -44,13 +45,23 @@ async function processChangesets(changesets, date, hour) {
  * @returns {Promise<string>} A promise that resolves to the file path of the processed changeset.
  */
 async function processChangeset(changeset, dataPath) {
-    // Process the changeset asynchronously and return the result
-    const url = `https://real-changesets.s3.amazonaws.com/${changeset}.json`;
+    const url = `https://adiffs.osmcha.org/changesets/${changeset}.adiff`;
     // console.log(`Processing changeset ${changeset}`);
     try {
-        const response = await axios.get(url);
+        const response = await axios.get(url, { responseType: "text" });
         const data = response.data;
-        const geojson = changesetParser(data);
+        const diffData = await adiffParser(data);
+
+        // SOMETHING IS WRONG
+        const mimickRealDatasets = diffData.actions.map((a) => {
+          return {
+            ...a.new,
+            ...(a.old && { old: a.old }),
+            action: a.type,
+          };
+        });
+
+        const geojson = changesetParser(mimickRealDatasets);
         // console.log(`geojson: ${JSON.stringify(geojson)}`);
         const features = geojson.features;
 
