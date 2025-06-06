@@ -10,6 +10,6 @@ Note:
 ```sh
 
 docker build -t osm-gradient .
-docker run -it -v ./data:/tmp osm-gradient sh -c "./cli.js process-hour 2024-05-18 02"
-docker run -it -v ./data:/tmp osm-gradient sh -c "ogr2ogr -f FlatGeobuf /tmp/2024-05-18T02/2024-05-18T02:00.fgb /tmp/2024-05-18T02/2024-05-18T02:00.geojson -skipfailures"
+docker run -it -v ./data:/tmp osm-gradient sh -c "./cli.js process-hour 2025-05-18 02"
+docker run -it -v ./data:/tmp osm-gradient sh -c "ogr2ogr -f FlatGeobuf /tmp/2025-05-18T02/2025-05-18T02:00.fgb /tmp/2025-05-18T02/2025-05-18T02:00.geojson -skipfailures"
 ```
