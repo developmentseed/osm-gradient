@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@osmcha/osm-adiff-parser@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/@osmcha/osm-adiff-parser/-/osm-adiff-parser-3.1.0.tgz#bbd6a4a4052145ba19fe04a1039a28a164cfe1e6"
+  integrity sha512-TX+cCDkBE3bDMqn4ice5R7UzQY+cX+4h16DGRTvZfzq5QwRxluPcnD7PlQdc2JoJ7L2ViACLMkc7VxRqnf2noA==
+  dependencies:
+    sax "^1.4.1"
+
 "@turf/bbox-polygon@^6.0.1":
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/@turf/bbox-polygon/-/bbox-polygon-6.5.0.tgz#f18128b012eedfa860a521d8f2b3779cc0801032"
@@ -120,3 +127,8 @@ sax@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.3.0.tgz#a5dbe77db3be05c9d1ee7785dbd3ea9de51593d0"
   integrity sha512-0s+oAmw9zLl1V1cS9BtZN7JAd0cW5e0QH4W3LWEK6a4LaLEA2OTpGYWDY+6XasBLtz6wkm3u1xRw95mRuJ59WA==
+
+sax@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/sax/-/sax-1.4.1.tgz#44cc8988377f126304d3b3fc1010c733b929ef0f"
+  integrity sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==
