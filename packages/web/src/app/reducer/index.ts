@@ -13,10 +13,10 @@ import { useEffect } from "preact/hooks";
 import type { Dispatch, Reducer } from "preact/hooks";
 
 const availableTimestamps = [
-  `2024-05-19T05:00:00Z`,
-  `2024-05-19T06:00:00Z`,
-  `2024-05-19T07:00:00Z`,
-  `2024-05-19T08:00:00Z`,
+  `2025-06-17T07:00:00Z`,
+  `2025-06-17T08:00:00Z`,
+  `2025-06-17T09:00:00Z`,
+  `2025-06-17T10:00:00Z`,
 ];
 
 // TODO move to types.ts
